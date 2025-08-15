@@ -7,7 +7,6 @@ import { ConfigModule } from '@nestjs/config';
 import { ClientsModule } from '@nestjs/microservices';
 import { USERS_CLIENT } from '@app/contracts';
 import { PassportModule } from '@nestjs/passport';
-import { join } from 'path';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { BcryptProvider, HashingProvider } from '@app/common';
@@ -17,7 +16,7 @@ import { BcryptProvider, HashingProvider } from '@app/common';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [authConfig],
-      envFilePath: join(__dirname, '/', '../../../apps/auth/.env'),
+      envFilePath: `${process.cwd()}/apps/auth/.env`,
     }),
     JwtModule.registerAsync(authConfig.asProvider()), // asProvider() helps to avoid write any extra boilerplate code (that we would have used in order to inject a module using useFactory)
 

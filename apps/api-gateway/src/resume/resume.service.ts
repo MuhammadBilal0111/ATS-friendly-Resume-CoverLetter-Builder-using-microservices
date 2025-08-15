@@ -1,24 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { CreateResumeDto } from './dto/createResumeDto';
+import { CreateResumeDto } from './dto/createResume.dto';
 import { UpdateResumeDto } from './dto/updateResume.dto';
 import { ResumeByUserIdDto } from './dto/getResumeByUserId.dto';
 import { DeleteResumeDto } from './dto/deleteResume.dto';
-import {
-  AI_CLIENT,
-  AI_PATTERNS,
-  RESUME_CLIENT,
-  RESUME_PATTERNS,
-} from '@app/contracts';
+import { RESUME_CLIENT, RESUME_PATTERNS } from '@app/contracts';
 import { lastValueFrom } from 'rxjs';
 import { throwHttpExceptionFromRpc } from '@app/common';
+import { OptimizeResumeDto } from './dto/optimizeResume.dto';
 
 @Injectable()
 export class ResumeService {
   // Injecting the Resume microservice client via dependency injection
   constructor(
     @Inject(RESUME_CLIENT) private readonly resumeClient: ClientProxy,
-    @Inject(AI_CLIENT) private readonly aiClient: ClientProxy,
   ) {}
 
   // Sends a message to create a new resume
@@ -72,10 +67,13 @@ export class ResumeService {
   }
   // Sends a message ai microservice to optimize a resume
 
-  public async optimizeResume(createResumeDto: CreateResumeDto) {
+  public async optimizeResume(optimizeResumeDto: OptimizeResumeDto) {
     try {
       return await lastValueFrom(
-        this.aiClient.send(AI_PATTERNS.OPTIMIZE_RESUME, createResumeDto),
+        this.resumeClient.send(
+          RESUME_PATTERNS.OPTIMIZE_RESUME,
+          optimizeResumeDto,
+        ),
       );
     } catch (error) {
       throwHttpExceptionFromRpc(error);

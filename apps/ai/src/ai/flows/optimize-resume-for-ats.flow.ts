@@ -1,14 +1,14 @@
-import { ai } from '../genkit/index';
 import { loadPrompt } from '../utils/loadPrompts';
-import { PROMPTS } from '../constants/prompts-file';
+import { PROMPTS_FILE_PATH } from '../constants/prompts-file-path';
 import { ResumeSchema } from '../schemas/resume.schema';
-import { z } from 'genkit';
+import { z, type Genkit } from 'genkit';
 
 // Input Schema
 export const OptimizeResumeForATSInputSchema = z.object({
   resume: ResumeSchema,
   jobDescription: z
     .string()
+    .optional()
     .describe('The full job description the user is applying for.'),
 });
 
@@ -22,10 +22,13 @@ export type OptimizeResumeForATSOutput = z.infer<typeof ResumeSchema>;
 let atsPromptText: string | null = null;
 
 export async function optimizeResumeForATS(
+  ai: Genkit, // Pass in the injected AI instance
   input: OptimizeResumeForATSInput,
 ): Promise<OptimizeResumeForATSOutput> {
   if (!atsPromptText) {
-    atsPromptText = await loadPrompt(PROMPTS.RESUME_ATS_OPTIMIZATION);
+    atsPromptText = await loadPrompt(
+      PROMPTS_FILE_PATH.RESUME_ATS_OPTIMIZATION_PROMPT_FILE_PATH,
+    );
   }
 
   // Define the prompt

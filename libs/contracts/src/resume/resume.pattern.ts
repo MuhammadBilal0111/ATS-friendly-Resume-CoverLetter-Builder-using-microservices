@@ -5,4 +5,5 @@ export const RESUME_PATTERNS = {
   UPDATE_RESUME: 'resume.updateResume',
   SAVE_RESUME: 'resume.saveResume',
   DOWNLOAD_RESUME: 'resume.downloadResume',
+  OPTIMIZE_RESUME: 'resume.optimizeResume',
 };

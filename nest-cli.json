@@ -46,6 +46,15 @@
         "tsConfigPath": "libs/contracts/tsconfig.lib.json"
       }
     },
+    "cover-letter": {
+      "type": "application",
+      "root": "apps/cover-letter",
+      "entryFile": "main",
+      "sourceRoot": "apps/cover-letter/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/cover-letter/tsconfig.app.json"
+      }
+    },
     "resume": {
       "type": "application",
       "root": "apps/resume",

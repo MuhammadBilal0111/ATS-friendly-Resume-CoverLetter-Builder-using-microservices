@@ -10,9 +10,10 @@ import {
   Put,
 } from '@nestjs/common';
 import { ResumeService } from './resume.service';
-import { CreateResumeDto } from './dto/createResumeDto';
+import { CreateResumeDto } from './dto/createResume.dto';
 import { UpdateResumeDto } from './dto/updateResume.dto';
 import { ActiveUser } from '@app/common';
+import { OptimizeResumeDto } from './dto/optimizeResume.dto';
 
 // Base route: http://localhost:3000/resume
 @Controller('resume')
@@ -64,9 +65,9 @@ export class ResumeController {
   // Optimize a resume for ATS (Applicant Tracking Systems) using AI
   // Sends the provided resume data and job description to the AI microservice
   // Example: POST http://localhost:3000/resume/optimize
-  @Post('optimize')
-  public async optimizeResume(@Body() createResumeDto: CreateResumeDto) {
-    return this.resumeService.optimizeResume(createResumeDto);
+  @Get('optimize')
+  public async optimizeResume(@Body() optimizeResumeDto: OptimizeResumeDto) {
+    return this.resumeService.optimizeResume(optimizeResumeDto);
   }
 
   // POST /resume/save

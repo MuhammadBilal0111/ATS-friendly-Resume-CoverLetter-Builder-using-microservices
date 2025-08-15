@@ -1,21 +1,26 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ObjectId } from 'mongodb';
 import {
+  AI_CLIENT,
+  AI_PATTERNS,
   CreateResumeDto,
   DeleteResumeDto,
+  OptimizeResumeDto,
   ResumeByUserIdDto,
   UpdateResumeDto,
 } from '@app/contracts';
 import { AppRpcException } from '@app/common';
 import { Resume } from './entities/resume.entity';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class ResumeService {
   constructor(
     @InjectRepository(Resume)
     private readonly resumeRepository: Repository<Resume>,
+    @Inject(AI_CLIENT) private readonly aiClient: ClientProxy,
   ) {}
   // Handles the logic for creating a new resume
   // The createResumeDto contains user-provided resume data
@@ -31,7 +36,6 @@ export class ResumeService {
       );
     }
   }
-
   // Fetches the resume associated with a specific user ID
   public async getResumeByUserId(resumeByUserId: ResumeByUserIdDto) {
     try {
@@ -56,7 +60,6 @@ export class ResumeService {
       );
     }
   }
-
   // Updates an existing resume with new information
   public async updateResume(updateResumeDto: UpdateResumeDto) {
     const { resumeId, ...resumeToUpdate } = updateResumeDto;
@@ -92,7 +95,6 @@ export class ResumeService {
       );
     }
   }
-
   // Deletes a user's resume from the system
   public async deleteResume(deleteResumeDto: DeleteResumeDto) {
     const resumeId = deleteResumeDto.resumeId;
@@ -117,6 +119,18 @@ export class ResumeService {
       if (error instanceof AppRpcException) throw error;
       throw new AppRpcException(
         'Failed to delete resume',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        error?.message || error,
+      );
+    }
+  }
+  // Optimize resume through AI
+  public async optimizeResume(optimizeResumeDto: OptimizeResumeDto) {
+    try {
+      return this.aiClient.send(AI_PATTERNS.OPTIMIZE_RESUME, optimizeResumeDto);
+    } catch (error) {
+      throw new AppRpcException(
+        'Failed to optimize resume via AI microservice',
         HttpStatus.INTERNAL_SERVER_ERROR,
         error?.message || error,
       );

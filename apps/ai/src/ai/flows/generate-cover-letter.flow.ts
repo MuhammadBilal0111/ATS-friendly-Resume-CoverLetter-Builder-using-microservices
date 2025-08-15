@@ -1,16 +1,15 @@
-import { ai } from '../genkit/index';
 import { loadPrompt } from '../utils/loadPrompts';
-import { PROMPTS } from '../constants/prompts-file';
+import { PROMPTS_FILE_PATH } from '../constants/prompts-file-path';
 import { CoverLetterSchema } from '../schemas/cover-letter.schema';
-import { z } from 'genkit';
+import { z, type Genkit } from 'genkit';
 
 // Input schema
-const CoverLetterInputSchema = z.object({
+export const CoverLetterInputSchema = z.object({
   coverLetter: CoverLetterSchema,
 });
 
 // Output schema
-const CoverLetterOutputSchema = z.object({
+export const CoverLetterOutputSchema = z.object({
   coverLetter: z.string().describe('The generated cover letter text.'),
 });
 
@@ -22,11 +21,14 @@ export type CoverLetterOutput = z.infer<typeof CoverLetterOutputSchema>;
 let coverLetterPromptText: string | null = null;
 
 export async function generateCoverLetter(
+  ai: Genkit, // Pass injected instance here
   input: CoverLetterInput,
 ): Promise<CoverLetterOutput> {
   // Load the prompt file only once
   if (!coverLetterPromptText) {
-    coverLetterPromptText = await loadPrompt(PROMPTS.COVER_LETTER);
+    coverLetterPromptText = await loadPrompt(
+      PROMPTS_FILE_PATH.COVER_LETTER_PROMPT_FILE_PATH,
+    );
   }
 
   // Define the prompt

@@ -10,16 +10,17 @@ import { ClientConfigModule } from './client-config/client-config.module';
 import { ClientConfigService } from './client-config/client-config.service';
 import { ClientProxyFactory } from '@nestjs/microservices';
 import { AuthorizeGuard } from '@app/common';
+import { CoverLetterModule } from './cover-letter/cover-letter.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, ResumeModule, ClientConfigModule],
+  imports: [AuthModule, UsersModule, ResumeModule, ClientConfigModule, CoverLetterModule],
   controllers: [ApiGatewayController],
   providers: [
     ApiGatewayService,
-    {
-      provide: APP_GUARD,
-      useClass: AuthorizeGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AuthorizeGuard,
+    // },
     {
       provide: AUTH_CLIENT,
       useFactory: (ClientConfigService: ClientConfigService) => {

@@ -6,7 +6,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
 import envValidation from './config/env.Validation';
-import { join } from 'path';
 import { User } from './entities/users.entity';
 import { BcryptProvider, HashingProvider } from '@app/common';
 
@@ -16,7 +15,7 @@ import { BcryptProvider, HashingProvider } from '@app/common';
     ConfigModule.forRoot({
       isGlobal: false, // only be use in users module
       load: [appConfig, databaseConfig],
-      envFilePath: join(__dirname, '/', '../../../apps/users/.env'),
+      envFilePath: `${process.cwd()}/apps/users/.env`,
       validationSchema: envValidation,
     }),
     TypeOrmModule.forRootAsync({

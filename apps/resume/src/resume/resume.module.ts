@@ -5,17 +5,27 @@ import databaseConfig from './config/database.config';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import envValidator from './config/env.validation';
-import { join } from 'path';
 import { Resume } from './entities/resume.entity';
+import { ClientsModule } from '@nestjs/microservices';
+import { AI_CLIENT } from '@app/contracts';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: false, // because the configuration is specific to the resume module
-      envFilePath: join(__dirname, '/', '../../../apps/resume/.env'), // specify the environment file
+      envFilePath: `${process.cwd()}/apps/resume/.env`, // specify the environment file
       load: [databaseConfig], // load the custom database configuration
       validationSchema: envValidator,
     }),
+    ClientsModule.register([
+      {
+        name: AI_CLIENT,
+        options: {
+          host: 'localhost',
+          port: 3004,
+        },
+      },
+    ]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

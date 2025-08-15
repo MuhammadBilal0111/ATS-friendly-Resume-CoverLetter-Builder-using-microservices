@@ -4,6 +4,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
   CreateResumeDto,
   DeleteResumeDto,
+  OptimizeResumeDto,
   RESUME_PATTERNS,
   ResumeByUserIdDto,
   UpdateResumeDto,
@@ -38,6 +39,12 @@ export class ResumeController {
   @MessagePattern(RESUME_PATTERNS.DELETE_RESUME)
   public async deleteResume(@Payload() deleteResumeDto: DeleteResumeDto) {
     return this.resumeService.deleteResume(deleteResumeDto);
+  }
+
+  // Handle optimze Resume for ATS
+  @MessagePattern(RESUME_PATTERNS.OPTIMIZE_RESUME)
+  public async optimizeResume(@Payload() optimizeResumeDto: OptimizeResumeDto) {
+    return this.resumeService.optimizeResume(optimizeResumeDto);
   }
 
   // Handle save (draft or partial save) of resume data

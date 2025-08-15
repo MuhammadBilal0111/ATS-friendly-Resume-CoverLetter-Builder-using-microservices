@@ -10,10 +10,11 @@ export * from './users/dto/delete-user-by-id.dto';
 export * from './users/dto/existing-user.dto';
 
 // Resumes
-export * from './resume/dto/createResumeDto';
+export * from './resume/dto/createResume.dto';
 export * from './resume/dto/getResumeByUserId.dto';
 export * from './resume/dto/updateResume.dto';
 export * from './resume/dto/deleteResume.dto';
+export * from './resume/dto/optimizeResume.dto';
 
 // Message Patterns
 export * from './auth/auth.patterns';
@@ -28,5 +29,4 @@ export * from './resume/resume.token';
 export * from './ai/ai.token';
 
 // interfaces
-
 export * from './auth/interface/active-user-type.interface';

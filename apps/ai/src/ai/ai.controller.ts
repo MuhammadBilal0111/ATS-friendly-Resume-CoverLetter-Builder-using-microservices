@@ -9,14 +9,19 @@ export class AiController {
 
   @MessagePattern(AI_PATTERNS.OPTIMIZE_RESUME)
   public async optimizeResume(@Payload() resume: any) {
-    // TODO: Validate data against OptimizeResumeForATSInputSchema
-    console.log('HEllo');
-    return this.aiService.optimizeResume(resume);
+    try {
+      return await this.aiService.optimizeResume(resume);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   @MessagePattern(AI_PATTERNS.GENERATE_COVER_LETTER)
   public async createCoverLetter(@Payload() coverLetter: any) {
-    // TODO: Validate data against GenerateCoverLetterInputSchema
-    return this.aiService.createCoverLetter(coverLetter);
+    try {
+      return await this.aiService.createCoverLetter(coverLetter);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

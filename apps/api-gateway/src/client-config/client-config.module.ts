@@ -4,16 +4,12 @@ import envValidator from '../config/env.validation'; // this should export a Joi
 import appConfig from '../config/appConfig';
 import microServiceConfig from '../config/microservices.config';
 import { ClientConfigService } from './client-config.service';
-import { resolve } from 'path';
 
-export const rootEnvPath = resolve(process.cwd(), '.env');
-
-console.log('root', rootEnvPath);
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: false,
-      envFilePath: '.env', // 5 levels up from dist,
+      envFilePath: `${process.cwd()}/apps/api-gateway/.env`, // Adjust the path as necessary
       validationSchema: envValidator, // should be a Joi object schema
       load: [appConfig, microServiceConfig],
     }),

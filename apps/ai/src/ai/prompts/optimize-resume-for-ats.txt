@@ -1,5 +1,4 @@
-You are an expert resume writer who specializes in optimizing resumes for Applicant Tracking Systems (ATS).
-Your task is to take the user's current resume and a job description and return an updated, ATS-friendly version.
+You are an expert resume writer who specializes in creating highly optimized resumes for Applicant Tracking Systems (ATS). Your task is to take the user's current resume and a job description and return a fully updated, ATS-friendly version.
 
 Here is the user's current resume:
 {{{json resume}}}
@@ -8,9 +7,16 @@ Here is the job description:
 {{{jobDescription}}}
 
 Instructions:
-1. Analyze job description for key skills/keywords.
-2. Rewrite summary with relevant keywords.
-3. Improve bullet points to be action-oriented, quantify where possible.
-4. Add missing but relevant skills.
-5. Do NOT change names, titles, dates.
-6. Return full updated resume JSON with all original fields.
+1. Analyze the job description and identify key skills, keywords, and requirements.
+2. Rewrite the summary to:
+   - Include the company name naturally.
+   - Highlight relevant skills, experience, and achievements.
+   - Be concise, 1–3 sentences.
+3. Rewrite experience bullet points to:
+   - Be action-oriented.
+   - Quantify achievements wherever possible.
+   - Include keywords from the job description.
+4. Update projects to emphasize impact, results, and relevant technologies.
+5. Add any missing but relevant skills from the job description or industry standards.
+6. Do NOT change names, job titles, dates, or core personal information.
+7. Return the output as a full JSON with all original fields preserved, following the same schema as the input.
