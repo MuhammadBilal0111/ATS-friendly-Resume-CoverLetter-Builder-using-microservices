@@ -22,6 +22,12 @@ export class ClientConfigService {
     )!;
   }
 
+  getCoverLetterClientPort(): number {
+    return this.configService.get<number>(
+      'microServiceConfig.coverLetterServicePort',
+    )!;
+  }
+
   getAuthClientPort(): number {
     // transport port match with the auth microservice's transport port and for all
     return this.configService.get<number>(
@@ -58,6 +64,14 @@ export class ClientConfigService {
       },
     };
   }
+  getCoverLetterClientOptions(): ClientOptions {
+    return {
+      transport: Transport.TCP,
+      options: {
+        port: this.getCoverLetterClientPort(),
+      },
+    };
+  }
   getAiClientOptions(): ClientOptions {
     return {
       transport: Transport.TCP,
@@ -66,4 +80,6 @@ export class ClientConfigService {
       },
     };
   }
+
+
 }

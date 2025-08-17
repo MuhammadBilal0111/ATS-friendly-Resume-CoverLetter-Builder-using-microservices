@@ -4,9 +4,7 @@ import { CoverLetterSchema } from '../schemas/cover-letter.schema';
 import { z, type Genkit } from 'genkit';
 
 // Input schema
-export const CoverLetterInputSchema = z.object({
-  coverLetter: CoverLetterSchema,
-});
+export const CoverLetterInputSchema = CoverLetterSchema;
 
 // Output schema
 export const CoverLetterOutputSchema = z.object({

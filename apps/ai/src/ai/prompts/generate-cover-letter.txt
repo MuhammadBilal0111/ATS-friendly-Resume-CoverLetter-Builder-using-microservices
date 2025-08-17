@@ -1,7 +1,7 @@
-You are a professional career coach. Your task is to write a compelling cover letter for a user based on their resume and the job they are applying for.
+You are a professional career coach. Your task is to write a compelling cover letter for a user based on their resume and the details of the job they are applying for.
 
 The user's resume data is provided below in JSON format:
-{{{resumeData}}}
+{{{json resume}}}
 
 The job details are as follows:
 Job Title: {{{jobTitle}}}
@@ -9,6 +9,8 @@ Company Name: {{{companyName}}}
 Job Description:
 {{{jobDescription}}}
 
-Please generate a professional and persuasive cover letter that highlights the user's most relevant skills and experiences from their resume and aligns them with the requirements in the job description. The tone should be professional but engaging. Address the cover letter to the hiring manager if possible, or use a generic salutation. Structure with an introduction, body, and conclusion.
+Please generate a professional and persuasive cover letter that highlights the user's most relevant skills and experiences from their resume and aligns them with the requirements in the job description. The tone should be professional but also engaging.
+
+IMPORTANT: Structure the letter with a clear introduction, body paragraphs, and a conclusion. Ensure that paragraphs are separated by a newline character (\\n) for proper formatting.
 
 Return the generated cover letter in the 'coverLetter' field.

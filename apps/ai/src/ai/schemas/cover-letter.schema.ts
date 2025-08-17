@@ -1,4 +1,5 @@
 import { z } from 'genkit';
+import { ResumeSchema } from './resume.schema';
 
 export const CoverLetterSchema = z.object({
   jobTitle: z
@@ -8,6 +9,6 @@ export const CoverLetterSchema = z.object({
     .string()
     .describe('The name of the company the user is applying for.'),
   jobDescription: z.string().describe('The job description.'),
-  resumeData: z.string().describe("The user's resume data in JSON format."),
+  resume: ResumeSchema.describe("The user's resume data."),
 });
 export type CoverLetter = z.infer<typeof CoverLetterSchema>;

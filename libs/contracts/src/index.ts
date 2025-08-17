@@ -16,16 +16,21 @@ export * from './resume/dto/updateResume.dto';
 export * from './resume/dto/deleteResume.dto';
 export * from './resume/dto/optimizeResume.dto';
 
+// Cover Letter
+export * from './cover-letter/dto/generateCoverLetter.dto';
+
 // Message Patterns
 export * from './auth/auth.patterns';
 export * from './users/users.pattern';
 export * from './resume/resume.pattern';
+export * from './cover-letter/cover-letter.pattern';
 export * from './ai/ai.pattern';
 
 // inject tokens
 export * from './auth/auth.token';
 export * from './users/users.token';
 export * from './resume/resume.token';
+export * from './cover-letter/cover-letter.token';
 export * from './ai/ai.token';
 
 // interfaces

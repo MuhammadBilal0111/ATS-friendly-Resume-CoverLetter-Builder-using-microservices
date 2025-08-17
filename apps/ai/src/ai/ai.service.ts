@@ -10,12 +10,18 @@ export class AiService {
   constructor(@Inject(GEMINI_AI_PROVIDER) private readonly geminiAi: Genkit) {}
 
   public async optimizeResume(resume: any) {
-    return await optimizeResumeForATS(this.geminiAi, resume);
+    try {
+      return await optimizeResumeForATS(this.geminiAi, resume);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   public async createCoverLetter(coverLetter: any) {
     try {
       return await generateCoverLetter(this.geminiAi, coverLetter);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

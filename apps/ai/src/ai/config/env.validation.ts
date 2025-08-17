@@ -2,5 +2,5 @@ import * as Joi from 'joi';
 
 export default Joi.object({
   GEMINI_API_KEY: Joi.string().required(),
-  AI_MODEL: Joi.string().optional(),
+  AI_MODEL: Joi.string().required(),
 });
