@@ -5,6 +5,7 @@ import { lastValueFrom } from 'rxjs';
 import { ExistingUserDto } from '../common/dto/existing-user.dto';
 import { CreateUserDto } from '../common/dto/create-user.dto';
 import { throwHttpExceptionFromRpc } from '@app/common';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +27,16 @@ export class AuthService {
       return await lastValueFrom(
         // convert in promise
         this.authClient.send(AUTH_PATTERNS.LOGIN, existingUserDto),
+      );
+    } catch (error) {
+      throwHttpExceptionFromRpc(error);
+    }
+  }
+  public async refreshToken(refreshTokenDto: RefreshTokenDto) {
+    try {
+      return await lastValueFrom(
+        // convert in promise
+        this.authClient.send(AUTH_PATTERNS.REFRESH_TOKEN, refreshTokenDto),
       );
     } catch (error) {
       throwHttpExceptionFromRpc(error);

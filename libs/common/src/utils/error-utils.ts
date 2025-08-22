@@ -1,4 +1,4 @@
-import { HttpStatus } from "@nestjs/common";
+import { HttpStatus } from '@nestjs/common';
 
 export function getErrorType(statusCode: number): string {
   switch (statusCode) {

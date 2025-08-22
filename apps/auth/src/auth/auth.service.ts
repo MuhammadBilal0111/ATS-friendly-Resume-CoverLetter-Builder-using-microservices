@@ -4,6 +4,7 @@ import {
   CreateUserDto,
   ExistingUserDto,
   JwtDto,
+  RefreshTokenDto,
   USERS_CLIENT,
   USERS_PATTERNS,
 } from '@app/contracts';
@@ -23,25 +24,30 @@ export class AuthService {
     private readonly hashingProvider: HashingProvider,
     private readonly jwtService: JwtService,
   ) {}
-  // function to generate access and refresh token
+
+  // function to generate access and refresh accessToken
   private async generateToken(user: any) {
-    // generate access token
+    // generate access accessToken
     const accessToken = await this.signToken<Partial<ActiveUserType>>(
       user.id,
-      this.authConfiguration.expiresIn,
+      this.authConfiguration.jwt_token_expiresIn,
       { email: user.email },
     );
 
-    // generate refresh token
-    const refreshToken = await this.signToken<Partial<ActiveUserType>>( // sign token is of  generic type
+    // generate refresh accessToken
+    const refreshToken = await this.signToken<Partial<ActiveUserType>>( // sign accessToken is of  generic type
       user.id,
       this.authConfiguration.refreshTokenExpiresIn,
     );
 
-    return { token: accessToken, refreshToken };
+    return { accessToken: accessToken, refreshToken };
   }
   // creating the private function
-  private async signToken<T>(userId: number, expiresIn: number, payload?: T) {
+  private async signToken<T>(
+    userId: number,
+    jwt_token_expiresIn: number,
+    payload?: T,
+  ) {
     // Generate the JWT
     // provide 2 arguments and 2 is optional
     return await this.jwtService.signAsync(
@@ -52,11 +58,11 @@ export class AuthService {
       },
       {
         secret: this.authConfiguration.secret, // secret key to generate jwt
-        expiresIn: expiresIn,
+        expiresIn: jwt_token_expiresIn,
         audience: this.authConfiguration.audience,
         issuer: this.authConfiguration.issuer,
       },
-      // here the process of signing json web token takes place
+      // here the process of signing json web accessToken takes place
     );
   }
   // function to handle sign up
@@ -85,11 +91,13 @@ export class AuthService {
     try {
       // Validate user credentials and get the user object
       const user = await this.validateUser(existingUserDto);
-      const { token, refreshToken } = await this.generateToken(user);
+      const { accessToken, refreshToken } = await this.generateToken(user);
       return {
-        token,
-        refreshToken,
         success: true,
+        accessToken,
+        refreshToken,
+        accessTokenExpiresIn: this.authConfiguration.jwt_token_expiresIn,
+        refreshTokenExpiresIn: this.authConfiguration.refreshTokenExpiresIn,
         message: 'User logged in successfully!',
       };
     } catch (error) {
@@ -143,7 +151,7 @@ export class AuthService {
   // function to verify jwt
   public async verifyJwt(jwtDto: JwtDto) {
     try {
-      // return payload if token is valid, otherwise through an exception
+      // return payload if accessToken is valid, otherwise through an exception
       const payload = await this.jwtService.verifyAsync(
         jwtDto.jwt,
         this.authConfiguration,
@@ -151,7 +159,31 @@ export class AuthService {
       return payload;
     } catch (error) {
       throw new AppRpcException(
-        'Authentication failed. Please provide a valid token.',
+        'Authentication failed. Please provide a valid accessToken.',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+  }
+  public async refreshToken(refreshTokenDto: RefreshTokenDto) {
+    try {
+      // 1. Verify the refresh token
+      const payload = await this.jwtService.verifyAsync(
+        refreshTokenDto.refreshToken,
+        {
+          secret: this.authConfiguration.secret,
+          audience: this.authConfiguration.audience,
+          issuer: this.authConfiguration.issuer,
+        },
+      );
+      return payload;
+      // TODO: ACCESS THE USER
+      // 2. Find user from DB using id
+      // const user = await this.usersService.findUserById(sub);
+      // 3. generate access and refresh token
+      // return this.generateToken(user);
+    } catch (error) {
+      throw new AppRpcException(
+        'Refresh token is invalid or expired. Please login again.',
         HttpStatus.UNAUTHORIZED,
       );
     }

@@ -5,9 +5,10 @@ import { ClientProxyFactory } from '@nestjs/microservices';
 import { USERS_CLIENT } from '@app/contracts';
 import { ClientConfigModule } from '../client-config/client-config.module';
 import { ClientConfigService } from '../client-config/client-config.service';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [ClientConfigModule],
+  imports: [ClientConfigModule, AuthModule],
   controllers: [UsersController],
   providers: [
     UsersService,

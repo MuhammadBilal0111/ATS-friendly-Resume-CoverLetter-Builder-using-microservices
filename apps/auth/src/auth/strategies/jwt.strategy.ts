@@ -12,20 +12,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly authConfiguration: ConfigType<typeof authConfig>,
   ) {
     super({
-      // Configurations
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: JwtRequest) => {
-          console.log('request', request?.jwt);
-          return request?.jwt;
+          return request.jwt; // custom extractor (used for RPC)
         },
       ]),
-      ignoreExpiration: false, // When set to false, Passport automatically denies access if the JWT has expired, so no additional code is needed for expiration handling.
+      ignoreExpiration: false,
       secretOrKey: authConfiguration.secret as string,
     });
   }
 
   public async validate(payload: any) {
-    console.log(payload);
+    // payload is the decoded JWT (id, email, roles, etc.
     return payload;
   }
 }

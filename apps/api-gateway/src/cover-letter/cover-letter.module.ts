@@ -5,9 +5,10 @@ import { ClientConfigModule } from '../client-config/client-config.module';
 import { ClientConfigService } from '../client-config/client-config.service';
 import { CoverLetterService } from './cover-letter.service';
 import { CoverLetterController } from './cover-letter.controller';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [ClientConfigModule],
+  imports: [ClientConfigModule, AuthModule],
   controllers: [CoverLetterController],
   providers: [
     CoverLetterService,

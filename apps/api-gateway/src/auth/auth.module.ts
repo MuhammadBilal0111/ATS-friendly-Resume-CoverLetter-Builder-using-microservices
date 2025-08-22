@@ -20,7 +20,7 @@ import { PassportModule } from '@nestjs/passport';
       inject: [ClientConfigService],
     },
   ],
-
+  exports: [AUTH_CLIENT],
   controllers: [AuthController],
 })
 export class AuthModule {}

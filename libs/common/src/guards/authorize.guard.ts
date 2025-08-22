@@ -4,14 +4,15 @@ import {
   ExecutionContext,
   Inject,
   Injectable,
-  UnauthorizedException,
   Logger,
+  HttpStatus,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { Request } from 'express';
 import { firstValueFrom } from 'rxjs';
 import { REQUEST_USER_KEY } from '../constants/request.constant';
 import { Reflector } from '@nestjs/core';
+import { throwHttpExceptionFromRpc } from '../exceptions/app-http.exception';
 
 @Injectable()
 export class AuthorizeGuard implements CanActivate {
@@ -26,43 +27,53 @@ export class AuthorizeGuard implements CanActivate {
     if (context.getType() !== 'http') {
       return false;
     }
-    // Read 'isPublic' metadata
-    const isPublic = this.reflector.getAllAndOverride('isPublic', [
-      context.getHandler(), // Check if metadata is set on the specific route handler (e.g., login method)
-      context.getClass(), // If not found on handler, check if it's set on the class (e.g., AuthController)
-    ]);
 
+    // Skip if route is marked public
+    const isPublic = this.reflector.getAllAndOverride('isPublic', [
+      context.getHandler(),
+      context.getClass(),
+    ]);
     if (isPublic) return true;
 
     const request: Request = context.switchToHttp().getRequest();
-    const authHeader = request.headers.authorization;
 
-    if (!authHeader) {
-      this.logger.warn('Authorization header missing');
-      throw new UnauthorizedException(
-        'Authorization token is missing or malformed.',
-      );
+    // Extract token from cookie or header
+    let token: string | undefined;
+    if (request.cookies?.access_token) {
+      token = request.cookies.access_token;
+    } else if (request.headers.authorization?.startsWith('Bearer ')) {
+      token = request.headers.authorization.split(' ')[1];
     }
+    console.log('token', token);
 
-    const token = authHeader.split(' ')[1];
+    // No token found → throw structured error
     if (!token) {
-      this.logger.warn('Bearer token missing');
-      throw new UnauthorizedException(
-        'Authorization token is missing or malformed.',
-      );
+      this.logger.warn('No authorization token found (header or cookie)');
+      throwHttpExceptionFromRpc({
+        statusCode: HttpStatus.UNAUTHORIZED,
+        message: 'Authorization token missing.',
+        cause: 'No token found in cookie or header',
+      });
     }
-
     try {
+      // Ask Auth microservice to verify JWT
       const user = await firstValueFrom(
         this.authClient.send(AUTH_PATTERNS.VERIFY_JWT, { jwt: token }),
       );
+      console.log('authorize guards', user);
+      // Attach verified user to request
       request[REQUEST_USER_KEY] = user;
       return true;
-    } catch (err) {
-      this.logger.warn('JWT verification failed', err);
-      throw new UnauthorizedException(
-        'Invalid or expired authorization token.',
-      );
+    } catch (error) {
+      this.logger.warn(`JWT verification failed: ${error?.message || error}`);
+
+      // Wrap microservice error into standard HTTP exception
+      throwHttpExceptionFromRpc({
+        statusCode: error?.statusCode || HttpStatus.UNAUTHORIZED,
+        message:
+          error?.message || 'Authentication failed. Invalid or expired token.',
+        cause: error,
+      });
     }
   }
 }

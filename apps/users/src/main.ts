@@ -14,7 +14,7 @@ async function bootstrap() {
       },
     },
   );
-  // defing gloval exception filter
+  // defing global exception filter
   app.useGlobalFilters(new RpcGlobalExceptionFilter());
   await app.listen(); // donot use the port in app.listen. PORT is specify in the options object
 }

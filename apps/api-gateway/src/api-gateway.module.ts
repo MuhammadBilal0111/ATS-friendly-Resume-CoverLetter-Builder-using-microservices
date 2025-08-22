@@ -5,12 +5,12 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ResumeModule } from './resume/resume.module';
 import { CoverLetterModule } from './cover-letter/cover-letter.module';
-// import { APP_GUARD } from '@nestjs/core';
 import { AUTH_CLIENT } from '@app/contracts';
 import { ClientConfigModule } from './client-config/client-config.module';
 import { ClientConfigService } from './client-config/client-config.service';
 import { ClientProxyFactory } from '@nestjs/microservices';
-// import { AuthorizeGuard } from '@app/common';
+import { AuthorizeGuard } from '@app/common';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [

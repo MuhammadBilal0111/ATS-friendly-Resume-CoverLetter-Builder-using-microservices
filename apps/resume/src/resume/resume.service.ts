@@ -136,14 +136,4 @@ export class ResumeService {
       );
     }
   }
-
-  // Saves a draft or temporary version of the resume
-  public async saveResume() {
-    return 'Save Resume';
-  }
-
-  // Handles logic for downloading a resume (e.g., as PDF or Word)
-  public async downloadResume() {
-    return 'Download Resume';
-  }
 }

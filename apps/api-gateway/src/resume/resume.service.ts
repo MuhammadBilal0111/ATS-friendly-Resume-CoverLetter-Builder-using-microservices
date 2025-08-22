@@ -79,26 +79,4 @@ export class ResumeService {
       throwHttpExceptionFromRpc(error);
     }
   }
-
-  // Sends a message to save a resume (usually used for draft or intermediate save)
-  public async saveResume(saveDto: any) {
-    try {
-      return await lastValueFrom(
-        this.resumeClient.send(RESUME_PATTERNS.SAVE_RESUME, saveDto),
-      );
-    } catch (error) {
-      throwHttpExceptionFromRpc(error);
-    }
-  }
-
-  // Sends a message to download a resume by user ID
-  public async downloadResume(userId: string) {
-    try {
-      return await lastValueFrom(
-        this.resumeClient.send(RESUME_PATTERNS.DOWNLOAD_RESUME, userId),
-      );
-    } catch (error) {
-      throwHttpExceptionFromRpc(error);
-    }
-  }
 }

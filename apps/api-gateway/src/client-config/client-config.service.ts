@@ -40,7 +40,7 @@ export class ClientConfigService {
 
   getUserClientOptions(): ClientOptions {
     return {
-      transport: Transport.TCP,
+      transport: Transport.TCP, // transport protocol match with the auth microservice's transport protocol and for all
       options: {
         port: this.getUserClientPort(),
       },
@@ -80,6 +80,4 @@ export class ClientConfigService {
       },
     };
   }
-
-
 }

@@ -6,6 +6,7 @@ import {
   CreateUserDto,
   ExistingUserDto,
   JwtDto,
+  RefreshTokenDto,
 } from '@app/contracts';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
@@ -19,20 +20,22 @@ export class AuthController {
   // Sign up controller
   @MessagePattern(AUTH_PATTERNS.SIGNUP)
   public async signup(@Payload() createUserDto: CreateUserDto) {
-    console.log('Pattern:', AUTH_PATTERNS.SIGNUP, createUserDto);
     return this.authService.signup(createUserDto);
   }
-
   // Login controller
   @MessagePattern(AUTH_PATTERNS.LOGIN)
   public async login(@Payload() existingUserDto: ExistingUserDto) {
     return this.authService.login(existingUserDto);
   }
-
   // Verification of JWT controller
   @UseGuards(JwtAuthGuard)
   @MessagePattern(AUTH_PATTERNS.VERIFY_JWT)
   public async verifyJwt(@Payload() jwtDto: JwtDto) {
     return this.authService.verifyJwt(jwtDto);
+  }
+  // handler of refresh token
+  @MessagePattern(AUTH_PATTERNS.REFRESH_TOKEN)
+  public async refreshToken(@Payload() refreshTokenDto: RefreshTokenDto) {
+    return this.authService.refreshToken(refreshTokenDto);
   }
 }

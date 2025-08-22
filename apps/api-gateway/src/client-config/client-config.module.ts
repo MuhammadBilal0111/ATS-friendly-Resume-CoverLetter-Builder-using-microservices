@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import envValidator from '../config/env.validation'; // this should export a Joi schema
-import appConfig from '../config/appConfig';
 import microServiceConfig from '../config/microservices.config';
 import { ClientConfigService } from './client-config.service';
 
@@ -11,7 +10,7 @@ import { ClientConfigService } from './client-config.service';
       isGlobal: false,
       envFilePath: `${process.cwd()}/apps/api-gateway/.env`, // Adjust the path as necessary
       validationSchema: envValidator, // should be a Joi object schema
-      load: [appConfig, microServiceConfig],
+      load: [microServiceConfig],
     }),
   ],
   providers: [ClientConfigService],

@@ -46,16 +46,4 @@ export class ResumeController {
   public async optimizeResume(@Payload() optimizeResumeDto: OptimizeResumeDto) {
     return this.resumeService.optimizeResume(optimizeResumeDto);
   }
-
-  // Handle save (draft or partial save) of resume data
-  @MessagePattern(RESUME_PATTERNS.SAVE_RESUME)
-  public async saveResume() {
-    return this.resumeService.saveResume();
-  }
-
-  // Handle resume download request
-  @MessagePattern(RESUME_PATTERNS.DOWNLOAD_RESUME)
-  public async downloadResume() {
-    return this.resumeService.downloadResume();
-  }
 }

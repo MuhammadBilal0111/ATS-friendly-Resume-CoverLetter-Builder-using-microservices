@@ -6,12 +6,15 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ActiveUser } from '@app/common';
+import { ActiveUser, AuthorizeGuard } from '@app/common';
 import { CreateUserDto } from '../common/dto/create-user.dto';
 
-// Base route: http://localhost:<port>/users
+// Base route: http://localhost:<port>/
+@UseGuards(AuthorizeGuard) 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

@@ -117,7 +117,17 @@ export class UsersService {
 
   public async getAllUsers(): Promise<User[]> {
     try {
-      return await this.userRepository.find();
+      return await this.userRepository.find({
+        // exclude password
+        select: [
+          'id',
+          'username',
+          'email',
+          'createdAt',
+          'updatedAt',
+          'deletedAt',
+        ],
+      });
     } catch (error) {
       throw new AppRpcException(
         'Failed to fetch users',

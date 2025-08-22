@@ -30,7 +30,10 @@ import { BcryptProvider, HashingProvider } from '@app/common';
         },
       },
     ]),
-    PassportModule,
+    PassportModule.register({
+      defaultStrategy: 'jwt',
+      session: false, // we donot need session everything is in the cookie
+    }),
   ],
   controllers: [AuthController],
   providers: [
