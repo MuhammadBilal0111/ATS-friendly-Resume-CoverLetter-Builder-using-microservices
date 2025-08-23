@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ResumeDto } from '../../common/dto/resume.dto';
+import { CreateResumeDto } from '../../resume/dto/createResume.dto';
 
 export class GenerateCoverLetterDto {
   @IsString()
@@ -16,6 +16,6 @@ export class GenerateCoverLetterDto {
   jobDescription: string;
 
   @ValidateNested()
-  @Type(() => ResumeDto)
-  resume: ResumeDto;
+  @Type(() => CreateResumeDto)
+  resume: CreateResumeDto;
 }

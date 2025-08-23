@@ -133,10 +133,6 @@ class TemplateDto {
 // “Hey, this property is another class. Please go and validate that class’s fields too.”
 
 export class CreateResumeDto {
-  @IsNotEmpty()
-  @IsInt()
-  userId: number;
-
   @ValidateNested()
   @Type(() => PersonalInfoDto)
   personalInfo: PersonalInfoDto;

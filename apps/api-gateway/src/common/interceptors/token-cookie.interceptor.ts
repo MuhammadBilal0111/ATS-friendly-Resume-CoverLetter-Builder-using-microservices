@@ -17,9 +17,10 @@ function setCookie(
   const isProd = process.env.NODE_ENV === 'production';
   response.cookie(name, value, {
     httpOnly: true,
-    secure: isProd,
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    secure: isProd ? true : false,
+    sameSite: isProd ? 'none' : 'lax',
     maxAge: maxAgeMs,
+    path: '/',
   });
 }
 

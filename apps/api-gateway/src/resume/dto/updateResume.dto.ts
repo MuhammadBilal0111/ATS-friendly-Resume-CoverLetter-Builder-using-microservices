@@ -6,5 +6,5 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export class UpdateResumeDto extends PartialType(CreateResumeDto) {
   @IsNotEmpty()
   @IsString()
-  resumeId: string;
+  _id: string;
 }

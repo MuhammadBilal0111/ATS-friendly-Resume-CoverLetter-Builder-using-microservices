@@ -12,7 +12,7 @@ async function bootstrap() {
     origin: configService.get<string>('CORS_ORIGIN') || 'http://localhost:4000',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
   });
   app.use(cookieParser());
   app.useGlobalFilters(new HttpGlobalExceptionFilter(configService));

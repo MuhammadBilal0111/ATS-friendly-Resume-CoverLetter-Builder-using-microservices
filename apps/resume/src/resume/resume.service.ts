@@ -43,7 +43,6 @@ export class ResumeService {
       const [resumes, total] = await this.resumeRepository.findAndCount({
         where: { userId: resumeByUserId.userId },
       });
-
       return {
         total,
         resumes,
@@ -62,7 +61,7 @@ export class ResumeService {
   }
   // Updates an existing resume with new information
   public async updateResume(updateResumeDto: UpdateResumeDto) {
-    const { resumeId, ...resumeToUpdate } = updateResumeDto;
+    const { _id: resumeId, ...resumeToUpdate } = updateResumeDto;
     try {
       const existingResume = await this.resumeRepository.findOneBy({
         _id: new ObjectId(resumeId),
@@ -74,10 +73,11 @@ export class ResumeService {
           HttpStatus.NOT_FOUND,
         );
       }
-      // Merge new data into existing entity
+      // Merge new data into existing entity, excluding _id and userId
+      const { _id, ...resumeDataToUpdate } = updateResumeDto;
       const mergedResume = this.resumeRepository.merge(
         existingResume,
-        resumeToUpdate,
+        resumeDataToUpdate,
       );
 
       const updatedResume = await this.resumeRepository.save(mergedResume); // updated resume

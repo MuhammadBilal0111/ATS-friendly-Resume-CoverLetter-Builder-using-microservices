@@ -124,7 +124,7 @@ export class Resume {
     type: 'int',
     nullable: false,
   })
-  userId!: number;
+  userId: number;
   // This is a TypeORM embedded column.
   // Hey! Inside this entity (like Resume), I want to include another object called personalInfo, and it should behave like part of this entity in the database.
 

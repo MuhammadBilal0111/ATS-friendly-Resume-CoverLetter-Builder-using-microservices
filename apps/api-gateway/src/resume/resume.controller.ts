@@ -15,24 +15,22 @@ import { CreateResumeDto } from './dto/createResume.dto';
 import { UpdateResumeDto } from './dto/updateResume.dto';
 import { ActiveUser, AuthorizeGuard } from '@app/common';
 import { OptimizeResumeDto } from './dto/optimizeResume.dto';
-import { ResumeByUserIdDto } from './dto/getResumeByUserId.dto';
 
 // Base route: http://localhost:3000/resume
 
-@UseGuards(AuthorizeGuard) // guard use for authorization
+// @UseGuards(AuthorizeGuard) // guard use for authorization
 @Controller('resume')
 export class ResumeController {
   constructor(private readonly resumeService: ResumeService) {}
 
   // POST /resume
   // Create a new resume
-  // Example: http://localhost:3000/
+  // Example: http://localhost:3000/resume
   @Post()
   public async createResume(
     @Body() createResumeDto: CreateResumeDto,
     @ActiveUser('sub') userId: number,
   ) {
-    console.log(userId);
     return this.resumeService.createResume(createResumeDto, userId);
   }
 
@@ -42,7 +40,7 @@ export class ResumeController {
   @Get()
   public async getResumeByUserId(@ActiveUser('sub') userId: number) {
     console.log(userId);
-    return this.resumeService.getResumeByUserId({ userId });
+    return this.resumeService.getResumeByUserId({ userId: 13 });
   }
 
   // PUT /resume
@@ -50,12 +48,9 @@ export class ResumeController {
   // Example: http://localhost:3000/resume/123
 
   @HttpCode(HttpStatus.CREATED)
-  @Put(':resumeId')
-  public async updateResume(
-    @Param('resumeId') resumeId: string,
-    @Body() body: Partial<UpdateResumeDto>,
-  ) {
-    return this.resumeService.updateResume({ resumeId, ...body });
+  @Put()
+  public async updateResume(@Body() updateResumeDto: UpdateResumeDto) {
+    return this.resumeService.updateResume(updateResumeDto);
   }
 
   // DELETE /resume/:resumeId
