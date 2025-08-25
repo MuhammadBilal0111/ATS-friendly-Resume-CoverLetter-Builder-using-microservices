@@ -3,7 +3,7 @@ import { CoverLetterService } from './cover-letter.service';
 import { GenerateCoverLetterDto } from './dto/generate-cover-letter.dto';
 import { AuthorizeGuard } from '@app/common';
 
-@UseGuards(AuthorizeGuard)
+// @UseGuards(AuthorizeGuard)
 @Controller('cover-letter')
 export class CoverLetterController {
   constructor(private readonly coverLetterService: CoverLetterService) {}

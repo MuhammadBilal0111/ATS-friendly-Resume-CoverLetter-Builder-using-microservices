@@ -6,7 +6,6 @@ import { ResumeByUserIdDto } from './dto/getResumeByUserId.dto';
 import { DeleteResumeDto } from './dto/deleteResume.dto';
 import { RESUME_CLIENT, RESUME_PATTERNS } from '@app/contracts';
 import { lastValueFrom } from 'rxjs';
-import { throwHttpExceptionFromRpc } from '@app/common';
 import { OptimizeResumeDto } from './dto/optimizeResume.dto';
 
 @Injectable()
@@ -18,65 +17,45 @@ export class ResumeService {
 
   // Sends a message to create a new resume
   public async createResume(createResumeDto: CreateResumeDto, userId: number) {
-    try {
-      return await lastValueFrom(
-        this.resumeClient.send(RESUME_PATTERNS.CREATE_RESUME, {
-          userId,
-          ...createResumeDto,
-        }),
-      );
-    } catch (error) {
-      throwHttpExceptionFromRpc(error);
-    }
+    return await lastValueFrom(
+      this.resumeClient.send(RESUME_PATTERNS.CREATE_RESUME, {
+        userId,
+        ...createResumeDto,
+      }),
+    );
   }
 
   // Sends a message to get a resume by the user's ID
   public async getResumeByUserId(resumeByUserIdDto: ResumeByUserIdDto) {
-    try {
-      return await lastValueFrom(
-        this.resumeClient.send(
-          RESUME_PATTERNS.GET_RESUME_BY_USER_ID,
-          resumeByUserIdDto,
-        ),
-      );
-    } catch (error) {
-      throwHttpExceptionFromRpc(error);
-    }
+    return await lastValueFrom(
+      this.resumeClient.send(
+        RESUME_PATTERNS.GET_RESUME_BY_USER_ID,
+        resumeByUserIdDto,
+      ),
+    );
   }
 
   // Sends a message to update a resume
   public async updateResume(updateResumeDto: UpdateResumeDto) {
-    try {
-      return await lastValueFrom(
-        this.resumeClient.send(RESUME_PATTERNS.UPDATE_RESUME, updateResumeDto),
-      );
-    } catch (error) {
-      throwHttpExceptionFromRpc(error);
-    }
+    return await lastValueFrom(
+      this.resumeClient.send(RESUME_PATTERNS.UPDATE_RESUME, updateResumeDto),
+    );
   }
 
   // Sends a message to delete a resume by user ID
   public async deleteResume(deleteResumeDto: DeleteResumeDto) {
-    try {
-      return await lastValueFrom(
-        this.resumeClient.send(RESUME_PATTERNS.DELETE_RESUME, deleteResumeDto),
-      );
-    } catch (error) {
-      throwHttpExceptionFromRpc(error);
-    }
+    return await lastValueFrom(
+      this.resumeClient.send(RESUME_PATTERNS.DELETE_RESUME, deleteResumeDto),
+    );
   }
   // Sends a message ai microservice to optimize a resume
 
   public async optimizeResume(optimizeResumeDto: OptimizeResumeDto) {
-    try {
-      return await lastValueFrom(
-        this.resumeClient.send(
-          RESUME_PATTERNS.OPTIMIZE_RESUME,
-          optimizeResumeDto,
-        ),
-      );
-    } catch (error) {
-      throwHttpExceptionFromRpc(error);
-    }
+    return await lastValueFrom(
+      this.resumeClient.send(
+        RESUME_PATTERNS.OPTIMIZE_RESUME,
+        optimizeResumeDto,
+      ),
+    );
   }
 }

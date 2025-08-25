@@ -9,9 +9,6 @@ export * from './exceptions/app-rpc.exception';
 export * from './filters/http-global-exception.filter';
 export * from './filters/rpc-global-exception.filter';
 
-// utils
-export * from './exceptions/app-http.exception';
-
 // Guards
 export * from './guards/authorize.guard';
 

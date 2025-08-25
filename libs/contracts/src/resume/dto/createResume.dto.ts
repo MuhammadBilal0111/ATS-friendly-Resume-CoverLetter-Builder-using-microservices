@@ -69,7 +69,8 @@ class EducationDto {
   endDate: string;
 
   @IsString()
-  gpa: string;
+  @IsOptional()
+  gpa?: string;
 }
 
 class ProjectDto {

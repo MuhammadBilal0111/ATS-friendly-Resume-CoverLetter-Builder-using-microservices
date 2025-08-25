@@ -4,6 +4,7 @@ import { HttpGlobalExceptionFilter } from '@app/common';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as cookieParser from 'cookie-parser';
+import { ErrorsInterceptor } from './common/interceptors/error.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(ApiGatewayModule);
@@ -15,7 +16,8 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
   });
   app.use(cookieParser());
-  app.useGlobalFilters(new HttpGlobalExceptionFilter(configService));
+  app.useGlobalInterceptors(new ErrorsInterceptor()); // Global error interceptors
+  app.useGlobalFilters(new HttpGlobalExceptionFilter(configService)); // al HTTP exception catch by this filter
   // global pipes
   app.useGlobalPipes(
     new ValidationPipe({

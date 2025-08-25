@@ -11,6 +11,7 @@ import { ClientConfigService } from './client-config/client-config.service';
 import { ClientProxyFactory } from '@nestjs/microservices';
 import { AuthorizeGuard } from '@app/common';
 import { APP_GUARD } from '@nestjs/core';
+import { ErrorsInterceptor } from './common/interceptors/error.interceptor';
 
 @Module({
   imports: [

@@ -12,7 +12,6 @@ import { Request } from 'express';
 import { firstValueFrom } from 'rxjs';
 import { REQUEST_USER_KEY } from '../constants/request.constant';
 import { Reflector } from '@nestjs/core';
-import { throwHttpExceptionFromRpc } from '../exceptions/app-http.exception';
 
 @Injectable()
 export class AuthorizeGuard implements CanActivate {
@@ -44,36 +43,36 @@ export class AuthorizeGuard implements CanActivate {
     } else if (request.headers.authorization?.startsWith('Bearer ')) {
       token = request.headers.authorization.split(' ')[1];
     }
-    console.log('token', token);
 
-    // No token found → throw structured error
     if (!token) {
       this.logger.warn('No authorization token found (header or cookie)');
-      throwHttpExceptionFromRpc({
+      // just throw raw error → interceptor will wrap it
+      throw {
         statusCode: HttpStatus.UNAUTHORIZED,
         message: 'Authorization token missing.',
         cause: 'No token found in cookie or header',
-      });
+      };
     }
+
     try {
       // Ask Auth microservice to verify JWT
       const user = await firstValueFrom(
         this.authClient.send(AUTH_PATTERNS.VERIFY_JWT, { jwt: token }),
       );
-      console.log('authorize guards', user);
+
       // Attach verified user to request
       request[REQUEST_USER_KEY] = user;
       return true;
     } catch (error) {
       this.logger.warn(`JWT verification failed: ${error?.message || error}`);
 
-      // Wrap microservice error into standard HTTP exception
-      throwHttpExceptionFromRpc({
+      // throw raw error → ErrorsInterceptor converts to AppRpcHttpException
+      throw {
         statusCode: error?.statusCode || HttpStatus.UNAUTHORIZED,
         message:
           error?.message || 'Authentication failed. Invalid or expired token.',
         cause: error,
-      });
+      };
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { CoverLetterService } from './cover-letter.service';
 import { COVER_LETTER_PATTERNS, GenerateCoverLetterDto } from '@app/contracts';
 import { MessagePattern, Payload } from '@nestjs/microservices';

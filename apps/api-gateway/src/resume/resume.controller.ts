@@ -29,7 +29,7 @@ export class ResumeController {
   @Post()
   public async createResume(
     @Body() createResumeDto: CreateResumeDto,
-    @ActiveUser('sub') userId: number,
+    @ActiveUser('sub') userId: number = 13,
   ) {
     return this.resumeService.createResume(createResumeDto, userId);
   }
