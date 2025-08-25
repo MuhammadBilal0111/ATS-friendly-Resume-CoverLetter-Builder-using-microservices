@@ -10,7 +10,8 @@ export class CoverLetterService {
     private readonly coverLetterClient: ClientProxy,
   ) {}
 
-  public async generateCoverLetter(coverLetter: GenerateCoverLetterDto) {
+  // Sends a message to the Cover Letter microservice to generate a cover letter
+  public generateCoverLetter(coverLetter: GenerateCoverLetterDto) {
     return this.coverLetterClient.send(
       COVER_LETTER_PATTERNS.GENERATE_COVER_LETTER,
       coverLetter,

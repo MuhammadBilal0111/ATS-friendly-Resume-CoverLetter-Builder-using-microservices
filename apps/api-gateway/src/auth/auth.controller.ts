@@ -20,21 +20,23 @@ export class AuthController {
   // http://localhost:3001/auth/signup
   @AllowAnonymous()
   @Post('signup')
-  public async signup(@Body() createUser: CreateUserDto) {
-    return await this.authService.signup(createUser);
+  public signup(@Body() createUser: CreateUserDto) {
+    return this.authService.signup(createUser);
   }
+
   @UseInterceptors(CookieInterceptor)
   @AllowAnonymous()
   @Post('login')
   @HttpCode(HttpStatus.OK) // send response of status code 200
   // http://localhost:3001/auth/login
-  public async login(@Body() existingUserDto: ExistingUserDto) {
+  public login(@Body() existingUserDto: ExistingUserDto) {
     return this.authService.login(existingUserDto);
   }
+
   @UseInterceptors(CookieInterceptor)
   @AllowAnonymous()
   @Post('refresh-token')
-  public async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
+  public refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
     return this.authService.refreshToken(refreshTokenDto);
   }
 }

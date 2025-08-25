@@ -39,11 +39,17 @@ export class RpcHttpException extends HttpException {
  * To be used in API Gateway when catching errors from microservices.
  */
 export function mapRpcErrorToHttpException(error: any): RpcHttpException {
-  const statusCode = error?.statusCode
-    ? error.statusCode
-    : HttpStatus.INTERNAL_SERVER_ERROR;
+  // Pick the right status code from different possible shapes
+  const statusCode =
+    error?.statusCode ||
+    error?.status || // Nest built-in exceptions
+    error?.response?.statusCode ||
+    HttpStatus.INTERNAL_SERVER_ERROR;
 
-  const message = error?.message || 'Microservice request failed';
+  // Prefer message from Nest response, otherwise fallback
+  const message =
+    error?.response?.message || error?.message || 'Microservice request failed';
+
   const cause = error?.cause || error;
 
   return new RpcHttpException(statusCode, message, cause);

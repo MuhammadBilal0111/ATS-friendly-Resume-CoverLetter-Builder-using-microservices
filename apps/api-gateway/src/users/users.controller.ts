@@ -7,36 +7,38 @@ import {
   ParseIntPipe,
   Post,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ActiveUser, AuthorizeGuard } from '@app/common';
 import { CreateUserDto } from '../common/dto/create-user.dto';
 
 // Base route: http://localhost:<port>/
-@UseGuards(AuthorizeGuard) 
+// @UseGuards(AuthorizeGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   // POST: http://localhost:<port>/users
   @Post()
-  public async createUser(@Body() userDto: CreateUserDto) {
+  public createUser(@Body() userDto: CreateUserDto) {
     return this.usersService.createUser(userDto);
   }
+
   // GET -> http://localhost:<port>/users
   @Get()
-  public async getUsers() {
+  public getUsers() {
     return this.usersService.getUsers();
   }
+
   // GET -> http://localhost:<port>/users/profile
   @Get('profile')
-  public async getUserProfile(@ActiveUser('sub') userId: number) {
+  public getUserProfile(@ActiveUser('sub') userId: number) {
     return this.usersService.getUserById(userId);
   }
+
   // DELETE -> http://localhost:<port>/users/:userId
   @Delete(':userId')
-  public async deleteUser(@Param('userId', ParseIntPipe) userId: number) {
+  public deleteUser(@Param('userId', ParseIntPipe) userId: number) {
     return this.usersService.deleteUserById(userId);
   }
 }

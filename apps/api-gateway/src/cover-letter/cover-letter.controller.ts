@@ -8,13 +8,11 @@ import { AuthorizeGuard } from '@app/common';
 export class CoverLetterController {
   constructor(private readonly coverLetterService: CoverLetterService) {}
 
-  // Post /cover-letter
-  // Create a cover-letter with AI
-  // Example: http://localhost:3000
+  // POST /cover-letter
+  // Create a cover letter with AI
+  // Example: http://localhost:3000/cover-letter
   @Post()
-  public async generateCoverLetter(
-    @Body() coverLetter: GenerateCoverLetterDto,
-  ) {
+  public generateCoverLetter(@Body() coverLetter: GenerateCoverLetterDto) {
     return this.coverLetterService.generateCoverLetter(coverLetter);
   }
 }

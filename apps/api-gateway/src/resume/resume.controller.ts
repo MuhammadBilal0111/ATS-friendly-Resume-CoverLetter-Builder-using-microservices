@@ -15,6 +15,7 @@ import { CreateResumeDto } from './dto/createResume.dto';
 import { UpdateResumeDto } from './dto/updateResume.dto';
 import { ActiveUser, AuthorizeGuard } from '@app/common';
 import { OptimizeResumeDto } from './dto/optimizeResume.dto';
+import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
 
 // Base route: http://localhost:3000/resume
 
@@ -27,7 +28,7 @@ export class ResumeController {
   // Create a new resume
   // Example: http://localhost:3000/resume
   @Post()
-  public async createResume(
+  public createResume(
     @Body() createResumeDto: CreateResumeDto,
     @ActiveUser('sub') userId: number = 13,
   ) {
@@ -38,7 +39,7 @@ export class ResumeController {
   // Get a resume by user ID
   // Example: http://localhost:3000/resume/123
   @Get()
-  public async getResumeByUserId(@ActiveUser('sub') userId: number) {
+  public getResumeByUserId(@ActiveUser('sub') userId: number) {
     console.log(userId);
     return this.resumeService.getResumeByUserId({ userId: 13 });
   }
@@ -46,10 +47,9 @@ export class ResumeController {
   // PUT /resume
   // Update an existing resume
   // Example: http://localhost:3000/resume/123
-
   @HttpCode(HttpStatus.CREATED)
   @Put()
-  public async updateResume(@Body() updateResumeDto: UpdateResumeDto) {
+  public updateResume(@Body() updateResumeDto: UpdateResumeDto) {
     return this.resumeService.updateResume(updateResumeDto);
   }
 
@@ -58,7 +58,7 @@ export class ResumeController {
   // Example: http://localhost:3000/resume/resume_3457
   @Delete(':resumeId')
   @HttpCode(HttpStatus.OK) // 200 status code
-  public async deleteResume(@Param('resumeId') resumeId: string) {
+  public deleteResume(@Param('resumeId', ParseObjectIdPipe) resumeId: string) {
     return this.resumeService.deleteResume({ resumeId });
   }
 
@@ -67,7 +67,7 @@ export class ResumeController {
   // Sends the provided resume data and job description to the AI microservice
   // Example: POST http://localhost:3000/resume/optimize
   @Post('optimize')
-  public async optimizeResume(@Body() optimizeResumeDto: OptimizeResumeDto) {
+  public optimizeResume(@Body() optimizeResumeDto: OptimizeResumeDto) {
     return this.resumeService.optimizeResume(optimizeResumeDto);
   }
 }

@@ -9,7 +9,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 
-// ExceptionFilter is used to override default exception handlerr
+// ExceptionFilter is used to override default exception handler
 @Catch(HttpException) // global filter usedto handles http exception
 export class HttpGlobalExceptionFilter implements ExceptionFilter {
   constructor(private readonly configService: ConfigService) {} // injecting configuration service
