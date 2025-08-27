@@ -117,13 +117,6 @@ export class AuthService {
         }),
       );
 
-      if (!user) {
-        throw new AppRpcException(
-          `User with email ${existingUserDto.email} does not exist!`,
-          HttpStatus.UNAUTHORIZED,
-        );
-      }
-
       const isMatch = await this.hashingProvider.comparePassword(
         existingUserDto.password,
         user.password, // Correct password hash comparison

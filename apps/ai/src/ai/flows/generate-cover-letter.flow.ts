@@ -2,6 +2,8 @@ import { loadPrompt } from '../utils/loadPrompts';
 import { PROMPTS_FILE_PATH } from '../constants/prompts-file-path';
 import { CoverLetterSchema } from '../schemas/cover-letter.schema';
 import { z, type Genkit } from 'genkit';
+import { HttpStatus } from '@nestjs/common';
+import { AppRpcException } from '@app/common';
 
 // Input schema
 export const CoverLetterInputSchema = CoverLetterSchema;
@@ -46,7 +48,12 @@ export async function generateCoverLetter(
     },
     async (flowInput) => {
       const { output } = await prompt(flowInput);
-      if (!output) throw new Error('Failed to generate cover letter');
+      if (!output) {
+        throw new AppRpcException(
+          'Failed to generate cover letter',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
       return output;
     },
   );

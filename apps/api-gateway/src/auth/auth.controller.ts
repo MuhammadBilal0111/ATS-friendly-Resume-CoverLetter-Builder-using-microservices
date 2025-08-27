@@ -12,8 +12,9 @@ import { CreateUserDto } from '../common/dto/create-user.dto';
 import { AllowAnonymous } from '@app/common';
 import { CookieInterceptor } from '../common/interceptors/token-cookie.interceptor';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { ROUTES } from '../routes.constants';
 
-@Controller('auth')
+@Controller(ROUTES.AUTH)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

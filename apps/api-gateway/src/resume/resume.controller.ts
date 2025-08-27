@@ -16,11 +16,12 @@ import { UpdateResumeDto } from './dto/updateResume.dto';
 import { ActiveUser, AuthorizeGuard } from '@app/common';
 import { OptimizeResumeDto } from './dto/optimizeResume.dto';
 import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
+import { ROUTES } from '../routes.constants';
 
 // Base route: http://localhost:3000/resume
 
-// @UseGuards(AuthorizeGuard) // guard use for authorization
-@Controller('resume')
+@UseGuards(AuthorizeGuard) // guard use for authorization
+@Controller(ROUTES.RESUME)
 export class ResumeController {
   constructor(private readonly resumeService: ResumeService) {}
 
@@ -41,7 +42,7 @@ export class ResumeController {
   @Get()
   public getResumeByUserId(@ActiveUser('sub') userId: number) {
     console.log(userId);
-    return this.resumeService.getResumeByUserId({ userId: 13 });
+    return this.resumeService.getResumeByUserId(userId);
   }
 
   // PUT /resume
@@ -59,7 +60,7 @@ export class ResumeController {
   @Delete(':resumeId')
   @HttpCode(HttpStatus.OK) // 200 status code
   public deleteResume(@Param('resumeId', ParseObjectIdPipe) resumeId: string) {
-    return this.resumeService.deleteResume({ resumeId });
+    return this.resumeService.deleteResume(resumeId);
   }
 
   // POST /resume/optimize

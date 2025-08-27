@@ -2,6 +2,8 @@ import { loadPrompt } from '../utils/loadPrompts';
 import { PROMPTS_FILE_PATH } from '../constants/prompts-file-path';
 import { ResumeSchema } from '../schemas/resume.schema';
 import { z, type Genkit } from 'genkit';
+import { AppRpcException } from '@app/common';
+import { HttpStatus } from '@nestjs/common';
 
 // Input Schema
 export const OptimizeResumeForATSInputSchema = z.object({
@@ -48,7 +50,12 @@ export async function optimizeResumeForATS(
     },
     async (flowInput) => {
       const { output } = await prompt(flowInput);
-      if (!output) throw new Error('Failed to optimize resume');
+      if (!output) {
+        throw new AppRpcException(
+          'Failed to generate cover letter',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
       return output;
     },
   );

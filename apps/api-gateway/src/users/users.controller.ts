@@ -11,10 +11,11 @@ import {
 import { UsersService } from './users.service';
 import { ActiveUser, AuthorizeGuard } from '@app/common';
 import { CreateUserDto } from '../common/dto/create-user.dto';
+import { ROUTES } from '../routes.constants';
 
 // Base route: http://localhost:<port>/
-// @UseGuards(AuthorizeGuard)
-@Controller('users')
+@UseGuards(AuthorizeGuard)
+@Controller(ROUTES.USERS)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

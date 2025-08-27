@@ -1,7 +1,8 @@
 import { AI_CLIENT, AI_PATTERNS, GenerateCoverLetterDto } from '@app/contracts';
-import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
-import { lastValueFrom } from 'rxjs';
+import { Inject, Injectable, HttpStatus } from '@nestjs/common';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
+import { throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class CoverLetterService {
@@ -11,13 +12,16 @@ export class CoverLetterService {
   ) {}
 
   public async generateCoverLetter(coverLetter: GenerateCoverLetterDto) {
-    try {
-      return await lastValueFrom(
-        this.aiClient.send(AI_PATTERNS.GENERATE_COVER_LETTER, coverLetter),
+    return this.aiClient
+      .send(AI_PATTERNS.GENERATE_COVER_LETTER, coverLetter)
+      .pipe(
+        catchError((err) => {
+          if (err instanceof RpcException) {
+            return throwError(() => err);
+          }
+          // fallback — in case something really unexpected happens
+          return throwError(() => new RpcException(err)); // already structured
+        }),
       );
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
   }
 }

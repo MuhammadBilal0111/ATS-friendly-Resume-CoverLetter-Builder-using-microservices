@@ -3,7 +3,6 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
 import envValidation from './config/env.Validation';
 import { User } from './entities/users.entity';
@@ -14,7 +13,7 @@ import { BcryptProvider, HashingProvider } from '@app/common';
     TypeOrmModule.forFeature([User]),
     ConfigModule.forRoot({
       isGlobal: false, // only be use in users module
-      load: [appConfig, databaseConfig],
+      load: [databaseConfig],
       envFilePath: `${process.cwd()}/apps/users/.env`,
       validationSchema: envValidation,
     }),

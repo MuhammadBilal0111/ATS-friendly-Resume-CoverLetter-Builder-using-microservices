@@ -2,9 +2,10 @@ import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { CoverLetterService } from './cover-letter.service';
 import { GenerateCoverLetterDto } from './dto/generate-cover-letter.dto';
 import { AuthorizeGuard } from '@app/common';
+import { ROUTES } from '../routes.constants';
 
-// @UseGuards(AuthorizeGuard)
-@Controller('cover-letter')
+@UseGuards(AuthorizeGuard)
+@Controller(ROUTES.COVER_LETTER)
 export class CoverLetterController {
   constructor(private readonly coverLetterService: CoverLetterService) {}
 

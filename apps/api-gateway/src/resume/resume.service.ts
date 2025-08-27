@@ -2,8 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { CreateResumeDto } from './dto/createResume.dto';
 import { UpdateResumeDto } from './dto/updateResume.dto';
-import { ResumeByUserIdDto } from './dto/getResumeByUserId.dto';
-import { DeleteResumeDto } from './dto/deleteResume.dto';
+
 import { RESUME_CLIENT, RESUME_PATTERNS } from '@app/contracts';
 import { OptimizeResumeDto } from './dto/optimizeResume.dto';
 
@@ -23,11 +22,10 @@ export class ResumeService {
   }
 
   // Sends a message to get a resume by the user's ID
-  public getResumeByUserId(resumeByUserIdDto: ResumeByUserIdDto) {
-    return this.resumeClient.send(
-      RESUME_PATTERNS.GET_RESUME_BY_USER_ID,
-      resumeByUserIdDto,
-    );
+  public getResumeByUserId(userId: number) {
+    return this.resumeClient.send(RESUME_PATTERNS.GET_RESUME_BY_USER_ID, {
+      userId,
+    });
   }
 
   // Sends a message to update a resume
@@ -39,11 +37,8 @@ export class ResumeService {
   }
 
   // Sends a message to delete a resume by user ID
-  public deleteResume(deleteResumeDto: DeleteResumeDto) {
-    return this.resumeClient.send(
-      RESUME_PATTERNS.DELETE_RESUME,
-      deleteResumeDto,
-    );
+  public deleteResume(resumeId: string) {
+    return this.resumeClient.send(RESUME_PATTERNS.DELETE_RESUME, { resumeId });
   }
 
   // Sends a message ai microservice to optimize a resume

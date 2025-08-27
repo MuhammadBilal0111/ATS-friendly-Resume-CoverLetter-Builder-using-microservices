@@ -9,6 +9,8 @@ import {
   GetUserByIdDto,
 } from '@app/contracts';
 import { AppRpcException, HashingProvider } from '@app/common';
+import { UserAlreadyExistsException } from './exceptions/user-already-exists.exception';
+import { UsersNotFoundException } from './exceptions/users-not-found.exception';
 
 @Injectable()
 export class UsersService {
@@ -26,10 +28,7 @@ export class UsersService {
       });
 
       if (existingUserWithUserName) {
-        throw new AppRpcException(
-          `Username '${userDto.username}' is already taken.`,
-          HttpStatus.CONFLICT,
-        );
+        throw new UserAlreadyExistsException('username', userDto.username);
       }
       const existingUserWithEmail = await this.userRepository.findOne({
         where: {
@@ -38,10 +37,7 @@ export class UsersService {
       });
 
       if (existingUserWithEmail) {
-        throw new AppRpcException(
-          `Email '${userDto.email}' is already registered.`,
-          HttpStatus.CONFLICT,
-        );
+        throw new UserAlreadyExistsException('Email', userDto.email);
       }
       // create User Object that map with users entity
       let user = this.userRepository.create({
@@ -53,7 +49,7 @@ export class UsersService {
       user = await this.userRepository.save(user);
       return user;
     } catch (error) {
-      if (error instanceof AppRpcException) throw error;
+      if (error instanceof UserAlreadyExistsException) throw error;
 
       throw new AppRpcException(
         'User creation failed due to an unexpected issue',
@@ -76,10 +72,7 @@ export class UsersService {
       );
     }
     if (!user) {
-      throw new AppRpcException(
-        `User with ID ${getUserByIdDto.userId} not found`,
-        HttpStatus.NOT_FOUND,
-      );
+      throw new UsersNotFoundException('ID', getUserByIdDto.userId.toString());
     }
     return user;
   }
@@ -93,9 +86,9 @@ export class UsersService {
       const result = await this.userRepository.delete(deleteUserByIdDto.userId);
       if (result.affected === 0) {
         // if not found
-        throw new AppRpcException(
-          `User with ID ${deleteUserByIdDto.userId} not found`,
-          HttpStatus.NOT_FOUND,
+        throw new UsersNotFoundException(
+          'ID',
+          deleteUserByIdDto.userId.toString(),
         );
       }
 
@@ -105,7 +98,7 @@ export class UsersService {
         message: 'User deleted successfully',
       };
     } catch (error) {
-      if (error instanceof AppRpcException) throw error;
+      if (error instanceof UsersNotFoundException) throw error;
 
       throw new AppRpcException(
         'Failed to delete user',
@@ -145,10 +138,13 @@ export class UsersService {
       });
     } catch (error) {
       throw new AppRpcException(
-        'User with given email could not be found',
+        'Failed to fetch user by email!',
         HttpStatus.INTERNAL_SERVER_ERROR,
         error?.message || error,
       );
+    }
+    if (!user) {
+      throw new UsersNotFoundException('email', email);
     }
     return user;
   }
