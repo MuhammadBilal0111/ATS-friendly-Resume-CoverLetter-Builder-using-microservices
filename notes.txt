@@ -8,7 +8,6 @@ so the controller in microservices is decorated by MesagePattern() or EventPatte
 2. Event Pattern:
   - Event attern used for the event based communication so when the messae is sent to the microservice the controller listens for the event and perform action but the controller cannot return any response back.
 
-
 add users module in the gateway application
 For Users microservice
 use this command nest generate module users --project api-gateway 
@@ -64,13 +63,6 @@ nest g library contracts
 
 gateway ke dto ka faida h age aik gateway s response me id title araha h books microservice me s or agr dosra gateway same books microservice use kre tou use sara books ka data dena h tou uss gateway ke dto me define krna hoga aik dto or uske hisaab s response denge .pipe(this.map())
 
-
-
-
-
-
-
-
 passport-jwt use to implement jwt strategy
 The @nestjs/jwt package (see more here) is a utility package that helps with JWT manipulation. 
 
@@ -83,7 +75,3 @@ There are two types of authentication strategies:
 
 1. passport-local: Used for username and password authentication.
 2. passport-jwt: Responsible for validating the JWT by extracting it from the Authorization header. It automatically checks if the token is valid or expired. If the JWT is invalid or expired, it will reject the request with a 403 Forbidden response. This means we don’t need to write custom logic for token validation and expiration handling.
-
-
-
-
