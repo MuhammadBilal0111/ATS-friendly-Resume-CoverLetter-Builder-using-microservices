@@ -1,21 +1,23 @@
 import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { RpcGlobalExceptionFilter } from '@app/common';
+import { MicroserviceOptions } from '@nestjs/microservices';
+import { RMQ_QUEUES, RmqService, RpcGlobalExceptionFilter } from '@app/common';
 import { UsersModule } from './users/users.module';
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    UsersModule,
-    {
-      transport: Transport.TCP,
-      options: {
-        host: 'localhost',
-        port: 3003,
-      },
-    },
+  const app = await NestFactory.create(UsersModule);
+  const rmqService = app.get<RmqService>(RmqService);
+
+  // Attach RabbitMQ microservice
+  app.connectMicroservice<MicroserviceOptions>(
+    rmqService.getOptions(RMQ_QUEUES.QUEUE_USERS),
   );
-  // defing global exception filter
+
+  // Global exception filter for RPC
   app.useGlobalFilters(new RpcGlobalExceptionFilter());
-  await app.listen(); // donot use the port in app.listen. PORT is specify in the options object
+
+  // Start all microservices (no TCP port needed)
+  await app.startAllMicroservices();
+  console.log('Users Microservice is running:');
+  console.log(`   - RabbitMQ Queue: ${RMQ_QUEUES.QUEUE_USERS}`);
 }
 bootstrap();

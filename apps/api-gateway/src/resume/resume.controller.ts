@@ -31,9 +31,10 @@ export class ResumeController {
   @Post()
   public createResume(
     @Body() createResumeDto: CreateResumeDto,
-    @ActiveUser('sub') userId: number = 13,
+    @ActiveUser('sub') userId: number,
   ) {
-    return this.resumeService.createResume(createResumeDto, userId);
+    console.log(userId);
+    // return this.resumeService.createResume(createResumeDto, userId);
   }
 
   // GET /resume/:userId

@@ -1,8 +1,8 @@
 import { AI_CLIENT, AI_PATTERNS, GenerateCoverLetterDto } from '@app/contracts';
-import { Inject, Injectable, HttpStatus } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, timeout } from 'rxjs/operators';
 
 @Injectable()
 export class CoverLetterService {
@@ -15,10 +15,12 @@ export class CoverLetterService {
     return this.aiClient
       .send(AI_PATTERNS.GENERATE_COVER_LETTER, coverLetter)
       .pipe(
-        catchError((err) => {
+        timeout(10000), // 10 seconds
+        catchError(({ err }) => {
           if (err instanceof RpcException) {
             return throwError(() => err);
           }
+
           // fallback — in case something really unexpected happens
           return throwError(() => new RpcException(err)); // already structured
         }),

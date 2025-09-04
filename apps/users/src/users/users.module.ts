@@ -6,14 +6,16 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from './config/database.config';
 import envValidation from './config/env.Validation';
 import { User } from './entities/users.entity';
-import { BcryptProvider, HashingProvider } from '@app/common';
+import { BcryptProvider, HashingProvider, RmqModule } from '@app/common';
+import rabbitMqConfig from './config/rabbitMq.config';
 
 @Module({
   imports: [
+    RmqModule,
     TypeOrmModule.forFeature([User]),
     ConfigModule.forRoot({
-      isGlobal: false, // only be use in users module
-      load: [databaseConfig],
+      isGlobal: true,
+      load: [databaseConfig, rabbitMqConfig],
       envFilePath: `${process.cwd()}/apps/users/.env`,
       validationSchema: envValidation,
     }),

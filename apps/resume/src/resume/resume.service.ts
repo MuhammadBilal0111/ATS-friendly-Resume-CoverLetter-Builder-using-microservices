@@ -13,7 +13,8 @@ import {
 } from '@app/contracts';
 import { AppRpcException } from '@app/common';
 import { Resume } from './entities/resume.entity';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
+import { catchError, throwError, timeout } from 'rxjs';
 
 @Injectable()
 export class ResumeService {
@@ -127,7 +128,20 @@ export class ResumeService {
   // Optimize resume through AI
   public async optimizeResume(optimizeResumeDto: OptimizeResumeDto) {
     try {
-      return this.aiClient.send(AI_PATTERNS.OPTIMIZE_RESUME, optimizeResumeDto);
+      return this.aiClient
+        .send(AI_PATTERNS.OPTIMIZE_RESUME, optimizeResumeDto)
+        .pipe(
+          timeout(10000), // 10 seconds
+          catchError(({ err }) => {
+            console.log('Error in CoverLetterService:', err);
+            if (err instanceof RpcException) {
+              return throwError(() => err);
+            }
+
+            // fallback — in case something really unexpected happens
+            return throwError(() => new RpcException(err)); // already structured
+          }),
+        );
     } catch (error) {
       throw new AppRpcException(
         'Failed to optimize resume via AI microservice',

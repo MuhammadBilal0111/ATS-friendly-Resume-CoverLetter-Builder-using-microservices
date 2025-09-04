@@ -23,10 +23,10 @@ import { APP_GUARD } from '@nestjs/core';
   controllers: [ApiGatewayController],
   providers: [
     ApiGatewayService,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: AuthorizeGuard,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: AuthorizeGuard,
+    },
     {
       provide: AUTH_CLIENT,
       useFactory: (ClientConfigService: ClientConfigService) => {

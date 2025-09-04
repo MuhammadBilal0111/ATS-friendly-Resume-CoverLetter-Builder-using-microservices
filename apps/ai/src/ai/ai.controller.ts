@@ -11,9 +11,10 @@ export class AiController {
   public async optimizeResume(@Payload() resume: any) {
     return this.aiService.optimizeResume(resume);
   }
-  
+
   @MessagePattern(AI_PATTERNS.GENERATE_COVER_LETTER)
   public async createCoverLetter(@Payload() coverLetter: any) {
+    console.log(coverLetter);
     return this.aiService.createCoverLetter(coverLetter);
   }
 }

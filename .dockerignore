@@ -1,0 +1,27 @@
+# ────────────────────────────────
+# Versioning and metadata
+# ────────────────────────────────
+.git
+.gitignore
+
+# Docker specific
+.dockerignore
+
+# ────────────────────────────────
+# Build dependencies
+# ────────────────────────────────
+dist.do
+node_modules
+
+# ────────────────────────────────
+# Environment (contains sensitive data)
+# ────────────────────────────────
+*.env
+
+# ────────────────────────────────
+# Miscellaneous
+# ────────────────────────────────
+.eslintrc.js
+.prettierrc
+README.md
+LICENSE

@@ -8,13 +8,15 @@ import envValidator from './config/env.validation';
 import { Resume } from './entities/resume.entity';
 import { ClientsModule } from '@nestjs/microservices';
 import { AI_CLIENT } from '@app/contracts';
+import { RMQ_QUEUES, RmqModule } from '@app/common';
+import rabbitMqConfig from './config/rabbitMq.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: false, // because the configuration is specific to the resume module
+      isGlobal: true, // because rmq module need access to env vars
       envFilePath: `${process.cwd()}/apps/resume/.env`, // specify the environment file
-      load: [databaseConfig], // load the custom database configuration
+      load: [databaseConfig, rabbitMqConfig], // load the custom database and rabbitMq configuration
       validationSchema: envValidator,
     }),
     ClientsModule.register([
@@ -39,8 +41,13 @@ import { AI_CLIENT } from '@app/contracts';
       }),
     }),
     TypeOrmModule.forFeature([Resume]),
+    RmqModule.register({
+      clientToken: AI_CLIENT,
+      queue: RMQ_QUEUES.QUEUE_RESUME_OPTIMIZE,
+    }),
+
     // register the Resume entity with TypeORM
-    // ✅ Register the entity, we can perform autoLoadEntities functionalities
+    // Register the entity, we can perform autoLoadEntities functionalities
     // This is where the repository gets created, now i can inject repositories in profile service
   ],
   controllers: [ResumeController],

@@ -15,3 +15,11 @@ export * from './guards/authorize.guard';
 // decorators
 export * from './decorators/allow-anonymous.decorator';
 export * from './decorators/active-user.decorator';
+
+// RabbitMq
+export * from './rmq/rmq.module';
+export * from './rmq/rmq.service';
+
+// common constants
+export * from './constants/rabbitMq-queues.constant';
+export * from './constants/request.constant';

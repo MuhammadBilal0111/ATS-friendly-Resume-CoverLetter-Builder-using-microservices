@@ -1,0 +1,55 @@
+services:
+  users:
+    container_name: users-microservice
+    build:
+    # context is the current directory
+      context: .
+      dockerfile: ./apps/users/src/Dockerfile
+      target: development # Pick the "development" stage
+
+    command: npm run start:dev users # overrided the default command in production stage
+    env_file:
+      - ./apps/users/.env
+    ports: 
+    - "3000:3000"
+    volumes:
+    # mount source code for the live reload in dev because in development we require live reloading
+    # map current directory with the app directory in container
+      - .:/usr/src/app
+      # exclude node_module from mouting,  we donot want to mount our own node_modules
+      - /usr/src/app/node_modules
+    
+    depends_on:
+      # because our application technially start when our database is live and running
+      - postgres-db
+      
+  postgres-db: # name of the service
+    container_name: postgres-db
+    image: postgres:17-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      # by default postgres runs on 
+      - '5432:5432'
+    volumes:
+      # /var/lib/postgresql/data this is the directory inside our docker container that docker uses by default
+      - db-data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: nestjs-pgadmin4
+    environment:
+      # define default pgadmin and pasword
+      - PGADMIN_DEFAULT_EMAIL=m.bilal0111@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=bilal4500332@gmail
+
+    ports:
+      - '5050:80'
+    depends_on:
+    # we need pgAdmin once our database started, pgadmin service waits until postgres started
+      - postgres-db
+    
+volumes:
+  db-data:

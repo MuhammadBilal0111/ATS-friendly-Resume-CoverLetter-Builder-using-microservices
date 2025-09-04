@@ -9,4 +9,5 @@ export default Joi.object({
   DB_USERNAME: Joi.string().required(),
   DB_NAME: Joi.string().required(),
   DB_HOST: Joi.string().required(),
+  RABBIT_MQ_URI: Joi.string().uri().required(),
 });

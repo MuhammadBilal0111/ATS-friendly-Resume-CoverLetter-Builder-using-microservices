@@ -1,21 +1,27 @@
 import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { RpcGlobalExceptionFilter } from '@app/common';
 import { AiAppModule } from './ai-app.module';
+import { RMQ_QUEUES, RmqService, RpcGlobalExceptionFilter } from '@app/common';
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AiAppModule,
-    {
-      transport: Transport.TCP,
-      options: {
-        host: 'localhost',
-        port: 3004,
-      },
-    },
+  const app = await NestFactory.create(AiAppModule);
+  const rmqService = app.get<RmqService>(RmqService);
+
+  // Connect AI microservice to both queues
+  app.connectMicroservice(
+    rmqService.getOptions(RMQ_QUEUES.QUEUE_RESUME_OPTIMIZE),
   );
-  // defing gloval exception filter
+  app.connectMicroservice(
+    rmqService.getOptions(RMQ_QUEUES.QUEUE_COVER_LETTER_CREATE),
+  );
+
+  // Apply global exception filter
   app.useGlobalFilters(new RpcGlobalExceptionFilter());
-  await app.listen();
+
+  // Start the microservices
+  await app.startAllMicroservices();
+  console.log(`AI Microservice is listening on:`);
+  console.log(`   - ${RMQ_QUEUES.QUEUE_RESUME_OPTIMIZE}`);
+  console.log(`   - ${RMQ_QUEUES.QUEUE_COVER_LETTER_CREATE}`);
 }
+
 bootstrap();
