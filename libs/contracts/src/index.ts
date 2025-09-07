@@ -20,12 +20,16 @@ export * from './resume/dto/optimizeResume.dto';
 // Cover Letter
 export * from './cover-letter/dto/generateCoverLetter.dto';
 
+// Notification
+export * from './notification/dto/notification.dto';
+
 // Message Patterns
 export * from './auth/auth.patterns';
 export * from './users/users.pattern';
 export * from './resume/resume.pattern';
 export * from './cover-letter/cover-letter.pattern';
 export * from './ai/ai.pattern';
+export * from './notification/notification.pattern';
 
 // inject tokens
 export * from './auth/auth.token';

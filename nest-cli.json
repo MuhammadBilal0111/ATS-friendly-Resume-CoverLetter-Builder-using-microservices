@@ -55,6 +55,15 @@
         "tsConfigPath": "apps/cover-letter/tsconfig.app.json"
       }
     },
+    "notification": {
+      "type": "application",
+      "root": "apps/notifications",
+      "entryFile": "main",
+      "sourceRoot": "apps/notifications/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/notifications/tsconfig.app.json"
+      }
+    },
     "resume": {
       "type": "application",
       "root": "apps/resume",
