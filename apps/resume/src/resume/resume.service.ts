@@ -127,27 +127,19 @@ export class ResumeService {
   }
   // Optimize resume through AI
   public async optimizeResume(optimizeResumeDto: OptimizeResumeDto) {
-    try {
-      return this.aiClient
-        .send(AI_PATTERNS.OPTIMIZE_RESUME, optimizeResumeDto)
-        .pipe(
-          timeout(10000), // 10 seconds
-          catchError(({ err }) => {
-            console.log('Error in CoverLetterService:', err);
-            if (err instanceof RpcException) {
-              return throwError(() => err);
-            }
+    return this.aiClient
+      .send(AI_PATTERNS.OPTIMIZE_RESUME, optimizeResumeDto)
+      .pipe(
+        timeout(20000), // 10 seconds
+        catchError((err) => {
+          console.log('Error in CoverLetterService:', err);
+          if (err instanceof RpcException) {
+            return throwError(() => err);
+          }
 
-            // fallback — in case something really unexpected happens
-            return throwError(() => new RpcException(err)); // already structured
-          }),
-        );
-    } catch (error) {
-      throw new AppRpcException(
-        'Failed to optimize resume via AI microservice',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        error?.message || error,
+          // fallback — in case something really unexpected happens
+          return throwError(() => new RpcException(err)); // already structured
+        }),
       );
-    }
   }
 }

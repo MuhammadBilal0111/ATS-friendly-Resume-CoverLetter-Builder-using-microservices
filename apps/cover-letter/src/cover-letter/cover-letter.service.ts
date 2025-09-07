@@ -15,8 +15,8 @@ export class CoverLetterService {
     return this.aiClient
       .send(AI_PATTERNS.GENERATE_COVER_LETTER, coverLetter)
       .pipe(
-        timeout(10000), // 10 seconds
-        catchError(({ err }) => {
+        timeout(20000), // 10 seconds
+        catchError((err) => {
           if (err instanceof RpcException) {
             return throwError(() => err);
           }

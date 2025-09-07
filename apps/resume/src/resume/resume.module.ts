@@ -43,7 +43,7 @@ import rabbitMqConfig from './config/rabbitMq.config';
     TypeOrmModule.forFeature([Resume]),
     RmqModule.register({
       clientToken: AI_CLIENT,
-      queue: RMQ_QUEUES.QUEUE_RESUME_OPTIMIZE,
+      queue: RMQ_QUEUES.RMQ_QUEUE_RESUME_TO_AI_OPTIMIZE,
     }),
 
     // register the Resume entity with TypeORM

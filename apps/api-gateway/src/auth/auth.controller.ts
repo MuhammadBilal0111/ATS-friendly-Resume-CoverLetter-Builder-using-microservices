@@ -12,15 +12,14 @@ import { CreateUserDto } from '../common/dto/create-user.dto';
 import { AllowAnonymous } from '@app/common';
 import { CookieInterceptor } from '../common/interceptors/token-cookie.interceptor';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { ROUTES } from '../routes.constants';
 
-@Controller(ROUTES.AUTH)
+@Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   // http://localhost:3001/auth/signup
   @AllowAnonymous()
-  @Post('signup')
+  @Post('register')
   public signup(@Body() createUser: CreateUserDto) {
     return this.authService.signup(createUser);
   }

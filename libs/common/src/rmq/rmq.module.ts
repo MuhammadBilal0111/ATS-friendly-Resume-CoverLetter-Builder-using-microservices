@@ -17,7 +17,6 @@ export class RmqModule {
   // name of the service to register
   // register function returns a dynamic module
   static register({ clientToken, queue }: RmqModuleOptions): DynamicModule {
-    console.log('Registering RMQ Module for:', String(clientToken));
     return {
       module: RmqModule, // the module to return
       imports: [

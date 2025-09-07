@@ -19,7 +19,7 @@ function setCookie(
     httpOnly: true,
     secure: isProd ? true : false,
     sameSite: isProd ? 'none' : 'lax',
-    maxAge: maxAgeMs,
+    maxAge: maxAgeMs * 1000,
     path: '/',
   });
 }

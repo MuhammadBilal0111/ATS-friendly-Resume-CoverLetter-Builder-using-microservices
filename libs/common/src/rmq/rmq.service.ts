@@ -6,8 +6,6 @@ import { RmqContext, RmqOptions, Transport } from '@nestjs/microservices';
 export class RmqService {
   constructor(private readonly configService: ConfigService) {}
   getOptions(queue: string, noAck = false): RmqOptions {
-    console.log(this.configService.get<string>('rabbitMq.rabbitMqUri')!);
-    console.log('queue', queue);
     return {
       transport: Transport.RMQ,
       options: {

@@ -8,10 +8,10 @@ async function bootstrap() {
 
   // Connect AI microservice to both queues
   app.connectMicroservice(
-    rmqService.getOptions(RMQ_QUEUES.QUEUE_RESUME_OPTIMIZE),
+    rmqService.getOptions(RMQ_QUEUES.RMQ_QUEUE_RESUME_TO_AI_OPTIMIZE),
   );
   app.connectMicroservice(
-    rmqService.getOptions(RMQ_QUEUES.QUEUE_COVER_LETTER_CREATE),
+    rmqService.getOptions(RMQ_QUEUES.RMQ_QUEUE_COVERLETTER_TO_AI_CREATE),
   );
 
   // Apply global exception filter
@@ -20,8 +20,8 @@ async function bootstrap() {
   // Start the microservices
   await app.startAllMicroservices();
   console.log(`AI Microservice is listening on:`);
-  console.log(`   - ${RMQ_QUEUES.QUEUE_RESUME_OPTIMIZE}`);
-  console.log(`   - ${RMQ_QUEUES.QUEUE_COVER_LETTER_CREATE}`);
+  console.log(`   - ${RMQ_QUEUES.RMQ_QUEUE_RESUME_TO_AI_OPTIMIZE}`);
+  console.log(`   - ${RMQ_QUEUES.RMQ_QUEUE_COVERLETTER_TO_AI_CREATE}`);
 }
 
 bootstrap();

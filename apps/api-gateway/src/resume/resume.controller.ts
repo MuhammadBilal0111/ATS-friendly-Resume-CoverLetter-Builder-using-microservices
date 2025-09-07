@@ -16,12 +16,11 @@ import { UpdateResumeDto } from './dto/updateResume.dto';
 import { ActiveUser, AuthorizeGuard } from '@app/common';
 import { OptimizeResumeDto } from './dto/optimizeResume.dto';
 import { ParseObjectIdPipe } from '../common/pipes/parse-object-id.pipe';
-import { ROUTES } from '../routes.constants';
 
 // Base route: http://localhost:3000/resume
 
 @UseGuards(AuthorizeGuard) // guard use for authorization
-@Controller(ROUTES.RESUME)
+@Controller('resume')
 export class ResumeController {
   constructor(private readonly resumeService: ResumeService) {}
 
@@ -33,8 +32,7 @@ export class ResumeController {
     @Body() createResumeDto: CreateResumeDto,
     @ActiveUser('sub') userId: number,
   ) {
-    console.log(userId);
-    // return this.resumeService.createResume(createResumeDto, userId);
+    return this.resumeService.createResume(createResumeDto, userId);
   }
 
   // GET /resume/:userId

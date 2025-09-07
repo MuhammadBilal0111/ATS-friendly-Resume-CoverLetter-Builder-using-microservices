@@ -17,7 +17,7 @@ import rabbitMqConfig from 'apps/resume/src/resume/config/rabbitMq.config';
     // shared module as the communication takes place from the cover-letter microservice to the Ai microservice using
     RmqModule.register({
       clientToken: AI_CLIENT,
-      queue: RMQ_QUEUES.QUEUE_COVER_LETTER_CREATE,
+      queue: RMQ_QUEUES.RMQ_QUEUE_COVERLETTER_TO_AI_CREATE,
     }),
   ],
   controllers: [CoverLetterController],

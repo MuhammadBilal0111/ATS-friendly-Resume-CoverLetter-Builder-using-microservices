@@ -10,7 +10,9 @@ async function bootstrap() {
   const app = await NestFactory.create(ApiGatewayModule);
   const configService = app.get(ConfigService);
   app.enableCors({
-    origin: configService.get<string>('CORS_ORIGIN') || 'http://localhost:4000',
+    origin:
+      configService.get<string>('microServiceConfig.corsOrigin') ||
+      'http://localhost:4000',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
@@ -27,7 +29,10 @@ async function bootstrap() {
     }),
   );
   await app.listen(
-    parseInt(configService.get<string>('API_GATEWAY_PORT') ?? '3000', 10),
+    parseInt(
+      configService.get<string>('microServiceConfig.apiGatewayPort') ?? '4000',
+      10,
+    ),
   );
 }
 bootstrap();

@@ -34,7 +34,7 @@ import { validationSchema } from './config/envValidation.config';
     // shared module as the communication takes place from the auth microservice to the users microservice using RMQ
     RmqModule.register({
       clientToken: USERS_CLIENT,
-      queue: RMQ_QUEUES.QUEUE_USERS, // auth communicate with users microservice using RMQ
+      queue: RMQ_QUEUES.RMQ_QUEUE_AUTH_TO_USERS, // auth communicate with users microservice using RMQ
     }),
   ],
   controllers: [AuthController],
