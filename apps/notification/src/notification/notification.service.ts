@@ -19,15 +19,11 @@ export class NotificationService {
         subject: 'Welcome Back to BaliResumate!',
         html: getLoginGreetingTemplate(notificationDto.username),
       });
-
       if (error) {
-        console.error('❌ Resend API Error:', error);
         throw new Error(`Failed to send email: ${error.message}`);
       }
-
       return data;
     } catch (error) {
-      console.error('❌ Email service error:', error);
       throw error;
     }
   }
