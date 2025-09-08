@@ -6,9 +6,9 @@ async function bootstrap() {
   const app = await NestFactory.create(NotificationsModule);
   const rmqService = app.get<RmqService>(RmqService);
 
-  // Connect Notifications microservice to the notifications queue
+  // Connect notification microservice to the notification queue
   app.connectMicroservice(
-    rmqService.getOptions(RMQ_QUEUES.RMQ_QUEUE_NOTIFICATIONS),
+    rmqService.getOptions(RMQ_QUEUES.RMQ_QUEUE_NOTIFICATION),
   );
 
   // Apply global exception filter
@@ -16,8 +16,8 @@ async function bootstrap() {
 
   // Start the microservices
   await app.startAllMicroservices();
-  console.log(`Notifications Microservice is listening on:`);
-  console.log(`   - ${RMQ_QUEUES.RMQ_QUEUE_NOTIFICATIONS}`);
+  console.log(`notification Microservice is listening on:`);
+  console.log(`   - ${RMQ_QUEUES.RMQ_QUEUE_NOTIFICATION}`);
 }
 
 bootstrap();

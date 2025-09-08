@@ -4,6 +4,8 @@ import {
   CreateUserDto,
   ExistingUserDto,
   JwtDto,
+  NOTIFICATION_CLIENT,
+  NOTIFICATION_PATTERNS,
   RefreshTokenDto,
   USERS_CLIENT,
   USERS_PATTERNS,
@@ -23,6 +25,12 @@ export class AuthService {
     private readonly authConfiguration: ConfigType<typeof authConfig>, // ConfigType is generic type, authConfiguration stores an object that the authconfig returning from the config file
     private readonly hashingProvider: HashingProvider,
     private readonly jwtService: JwtService,
+    /**
+     * The notification client is injected via the @Inject decorator. It is
+     * used to emit events to the notification microservice.
+     */
+    @Inject(NOTIFICATION_CLIENT)
+    private readonly notificationClient: ClientProxy,
   ) {}
 
   // function to generate access and refresh accessToken
@@ -92,6 +100,11 @@ export class AuthService {
       // Validate user credentials and get the user object
       const user = await this.validateUser(existingUserDto);
       const { accessToken, refreshToken } = await this.generateToken(user);
+      // emitting the event of send the email
+      this.notificationClient.emit(NOTIFICATION_PATTERNS.SEND_WELCOME_EMAIL, {
+        to: user.email,
+        username: user.username,
+      });
       return {
         success: true,
         accessToken,

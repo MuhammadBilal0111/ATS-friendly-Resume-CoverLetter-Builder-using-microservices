@@ -37,6 +37,8 @@ export * from './users/users.token';
 export * from './resume/resume.token';
 export * from './cover-letter/cover-letter.token';
 export * from './ai/ai.token';
+export * from './notification/notification.token';
+export * from './notification/resend.token';
 
 // interfaces
 export * from './auth/interface/active-user-type.interface';

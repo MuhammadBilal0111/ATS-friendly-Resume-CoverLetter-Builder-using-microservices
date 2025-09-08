@@ -3,9 +3,9 @@ import { IsEmail, IsString, IsNotEmpty } from 'class-validator';
 export class NotificationsDto {
   @IsEmail()
   @IsNotEmpty()
-  to: string;
+  to: string; // email to send the notification to
 
   @IsString()
   @IsNotEmpty()
-  userName: string;
+  username: string;
 }

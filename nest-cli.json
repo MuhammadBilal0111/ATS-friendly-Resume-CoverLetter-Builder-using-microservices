@@ -57,11 +57,11 @@
     },
     "notification": {
       "type": "application",
-      "root": "apps/notifications",
+      "root": "apps/notification",
       "entryFile": "main",
-      "sourceRoot": "apps/notifications/src",
+      "sourceRoot": "apps/notification/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/notifications/tsconfig.app.json"
+        "tsConfigPath": "apps/notification/tsconfig.app.json"
       }
     },
     "resume": {

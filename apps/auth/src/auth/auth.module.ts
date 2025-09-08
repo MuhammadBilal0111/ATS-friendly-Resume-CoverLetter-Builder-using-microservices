@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import authConfig from './config/auth.config';
 import { ConfigModule } from '@nestjs/config';
-import { USERS_CLIENT } from '@app/contracts';
+import { NOTIFICATION_CLIENT, USERS_CLIENT } from '@app/contracts';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -35,6 +35,11 @@ import { validationSchema } from './config/envValidation.config';
     RmqModule.register({
       clientToken: USERS_CLIENT,
       queue: RMQ_QUEUES.RMQ_QUEUE_AUTH_TO_USERS, // auth communicate with users microservice using RMQ
+    }),
+    // shared module as the communication takes place from the auth microservice to the notification microservice using RMQ
+    RmqModule.register({
+      clientToken: NOTIFICATION_CLIENT,
+      queue: RMQ_QUEUES.RMQ_QUEUE_NOTIFICATION, // register the notification queue for sending/receiving events (used by other services to communicate with the Notification microservice)
     }),
   ],
   controllers: [AuthController],
