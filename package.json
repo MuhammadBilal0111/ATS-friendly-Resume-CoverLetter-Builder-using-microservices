@@ -4,7 +4,11 @@
   "description": "",
   "author": "",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "LICENSED",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=11.5.2"
+  },
   "scripts": {
     "build:all": "nest build --all",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
