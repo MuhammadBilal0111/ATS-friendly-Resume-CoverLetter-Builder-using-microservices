@@ -8,6 +8,7 @@ import envValidation from './config/env.Validation';
 import { User } from './entities/users.entity';
 import { BcryptProvider, HashingProvider, RmqModule } from '@app/common';
 import rabbitMqConfig from './config/rabbitMq.config';
+import usersConfig from './config/users.config';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import rabbitMqConfig from './config/rabbitMq.config';
     TypeOrmModule.forFeature([User]),
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, rabbitMqConfig],
+      load: [databaseConfig, rabbitMqConfig, usersConfig],
       envFilePath: `${process.cwd()}/apps/users/.env`,
       validationSchema: envValidation,
     }),

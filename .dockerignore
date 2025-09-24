@@ -21,7 +21,7 @@ node_modules
 # ────────────────────────────────
 # Miscellaneous
 # ────────────────────────────────
-.eslintrc.js
+eslint.config.mjs
 .prettierrc
 README.md
 LICENSE

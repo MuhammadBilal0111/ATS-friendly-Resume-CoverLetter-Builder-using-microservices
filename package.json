@@ -10,7 +10,7 @@
     "npm": ">=11.5.2"
   },
   "scripts": {
-    "build:all": "nest build --all",
+    "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start api-gateway",
     "start:dev": "nest start api-gateway --watch",

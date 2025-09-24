@@ -2,64 +2,122 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientOptions, Transport } from '@nestjs/microservices';
 
-@Injectable() // First, we define a provider. The @Injectable() decorator marks the CatsService class as a provider.
+@Injectable()
 export class ClientConfigService {
   constructor(private readonly configService: ConfigService) {}
 
   getApiGatewayPort(): number {
     return this.configService.get<number>('microServiceConfig.apiGatewayPort')!;
   }
-  getUserClientPort(): number {
-    return this.configService.get<number>(
-      'microServiceConfig.userServicePort',
+
+  // -------------
+  // Auth Service
+  // -------------
+  getAuthClientHost(): string {
+    return this.configService.get<string>(
+      'microServiceConfig.authServiceHost',
     )!;
   }
+
+  getAuthClientPort(): number {
+    // Transport port must match the auth microservice's configured transport port
+    return this.configService.get<number>(
+      'microServiceConfig.authServicePort',
+    )!;
+  }
+
+  // ----------------
+  // Resume Service
+  // ----------------
+  getResumeClientHost(): string {
+    return this.configService.get<string>(
+      'microServiceConfig.resumeServiceHost',
+    )!;
+  }
+
   getResumeClientPort(): number {
     return this.configService.get<number>(
       'microServiceConfig.resumeServicePort',
     )!;
   }
+
+  // --------------
+  // User Service
+  // --------------
+  getUserClientHost(): string {
+    return this.configService.get<string>(
+      'microServiceConfig.userServiceHost',
+    )!;
+  }
+
+  getUserClientPort(): number {
+    return this.configService.get<number>(
+      'microServiceConfig.userServicePort',
+    )!;
+  }
+
+  // -------------------
+  // Cover Letter Service
+  // -------------------
+  getCoverLetterClientHost(): string {
+    return this.configService.get<string>(
+      'microServiceConfig.coverLetterServiceHost',
+    )!;
+  }
+
   getCoverLetterClientPort(): number {
     return this.configService.get<number>(
       'microServiceConfig.coverLetterServicePort',
     )!;
   }
-  getAuthClientPort(): number {
-    // transport port match with the auth microservice's transport port and for all
-    return this.configService.get<number>(
-      'microServiceConfig.authServicePort',
-    )!;
-  }
-  getUserClientOptions(): ClientOptions {
-    return {
-      transport: Transport.TCP, // transport protocol match with the auth microservice's transport protocol and for all
-      options: {
-        port: this.getUserClientPort(),
-      },
-    };
-  }
 
+  // --------------------------
+  // ClientOptions for Auth Service
+  // --------------------------
   getAuthClientOptions(): ClientOptions {
     return {
-      transport: Transport.TCP, // transport protocol match with the auth microservice's transport protocol and for all
+      transport: Transport.TCP, // Use TCP transport matching the auth microservice transport protocol
       options: {
+        host: this.getAuthClientHost(),
         port: this.getAuthClientPort(),
       },
     };
   }
 
+  // ---------------------------
+  // ClientOptions for Resume Service
+  // ---------------------------
   getResumeClientOptions(): ClientOptions {
     return {
       transport: Transport.TCP,
       options: {
+        host: this.getResumeClientHost(),
         port: this.getResumeClientPort(),
       },
     };
   }
+
+  // -------------------------
+  // ClientOptions for User Service
+  // -------------------------
+  getUserClientOptions(): ClientOptions {
+    return {
+      transport: Transport.TCP, // Use TCP transport matching the user microservice transport protocol
+      options: {
+        host: this.getUserClientHost(), // Host from configuration, typically Docker service name
+        port: this.getUserClientPort(),
+      },
+    };
+  }
+
+  // -----------------------------
+  // ClientOptions for Cover Letter Service
+  // -----------------------------
   getCoverLetterClientOptions(): ClientOptions {
     return {
       transport: Transport.TCP,
       options: {
+        host: this.getCoverLetterClientHost(),
         port: this.getCoverLetterClientPort(),
       },
     };

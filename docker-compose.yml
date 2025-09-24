@@ -1,55 +1,144 @@
+
 services:
-  users:
-    container_name: users-microservice
+  # API Gateway service
+  api-gateway:
+    container_name: api-gateway
     build:
-    # context is the current directory
-      context: .
-      dockerfile: ./apps/users/src/Dockerfile
-      target: development # Pick the "development" stage
-
-    command: npm run start:dev users # overrided the default command in production stage
+      context: .                          # Root of your project
+      dockerfile: ./apps/api-gateway/Dockerfile    # Path to your custom Dockerfile
+      target: development                 # Use the "development" stage
+    command: ["npm", "run", "start:dev:api-gateway"] # Override default command
     env_file:
-      - ./apps/users/.env
-    ports: 
-    - "3000:3000"
+      - ./apps/api-gateway/.env           # Load env vars from this file
     volumes:
-    # mount source code for the live reload in dev because in development we require live reloading
-    # map current directory with the app directory in container
-      - .:/usr/src/app
-      # exclude node_module from mouting,  we donot want to mount our own node_modules
-      - /usr/src/app/node_modules
-    
-    depends_on:
-      # because our application technially start when our database is live and running
-      - postgres-db
-      
-  postgres-db: # name of the service
-    container_name: postgres-db
-    image: postgres:17-alpine
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
+      - ./apps/api-gateway:/usr/src/app/apps/api-gateway                    # Mounts the current local project directory (host) to the container's working directory.
+      - ./libs:/usr/src/app/libs
+      - /usr/src/app/node_modules         # Prevents overwriting of node_modules by mounting the container's node_modules directory.
+    restart: always
     ports:
-      # by default postgres runs on 
-      - '5432:5432'
+      - "3000:3000"                       # Expose your API Gateway
+    networks:
+      - microservices
+
+  # Users service
+  users-service:
+    container_name: users-service
+    build:
+      context: .                          # Root of your project
+      dockerfile: ./apps/users/Dockerfile    # Path to your custom Dockerfile
+      target: development                 # Use the "development" stage
+    command: ["npm", "run", "start:dev:users"] # Override default command
+    env_file:
+      - ./apps/users/.env                 # Load env vars from this file
     volumes:
-      # /var/lib/postgresql/data this is the directory inside our docker container that docker uses by default
-      - db-data:/var/lib/postgresql/data
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: nestjs-pgadmin4
-    environment:
-      # define default pgadmin and pasword
-      - PGADMIN_DEFAULT_EMAIL=m.bilal0111@gmail.com
-      - PGADMIN_DEFAULT_PASSWORD=bilal4500332@gmail
-
+      - ./apps/users:/usr/src/app/apps/users                    # Mounts the current local project directory (host) to the container's working directory.
+      - ./libs:/usr/src/app/libs
+      - /usr/src/app/node_modules         # Prevents overwriting of node_modules by mounting the container's node_modules directory.
+    restart: always
     ports:
-      - '5050:80'
-    depends_on:
-    # we need pgAdmin once our database started, pgadmin service waits until postgres started
-      - postgres-db
-    
-volumes:
-  db-data:
+      - "3003:3003"                       # Expose your Users service
+    networks:
+      - microservices
+
+  # Resume service
+  resume-service:
+    container_name: resume-service
+    build: 
+      context: .                          # Root of your project
+      dockerfile: ./apps/resume/Dockerfile # Path to your custom Dockerfile
+      target: development                 # Use the "development" stage
+    command: ["npm", "run", "start:dev:resume"] # Override default command
+    env_file:
+      - ./apps/resume/.env                # Load env vars from this file
+    volumes:
+      - ./apps/resume:/usr/src/app/apps/resume                   # Mounts the current local project directory (host) to the container's working directory.
+      - ./libs:/usr/src/app/libs
+      - /usr/src/node_modules             # Prevents overwriting of node_modules by mounting the container's node_modules directory.
+    restart: always
+    ports:
+      - "3002:3002"                       # Expose your Resume service
+    networks:
+      - microservices
+
+  # Auth service
+  auth-service:
+    container_name: auth-service
+    build: 
+      context: .                          # Root of your project
+      dockerfile: ./apps/auth/Dockerfile  # Path to your custom Dockerfile
+      target: development                 # Use the "development" stage
+    command: ["npm", "run", "start:dev:auth"] # Override default command
+    env_file:
+      - ./apps/auth/.env                  # Load env vars from this file
+    volumes:
+      - ./apps/auth:/usr/src/app/apps/auth                    # Mounts the current local project directory (host) to the container's working directory.
+      - ./libs:/usr/src/app/libs
+      - /usr/src/node_modules             # Prevents overwriting of node_modules by mounting the container's node_modules directory.
+    restart: always
+    ports:
+      - "3001:3001"                       # Expose your Auth service
+    networks:
+      - microservices
+
+  # AI service
+  ai-service:
+    container_name: ai-service
+    build:
+      context: .                          # Root of your project
+      dockerfile: ./apps/ai/Dockerfile    # Path to your custom Dockerfile
+      target: development                 # Use the "development" stage
+    command: ["npm", "run", "start:dev:ai"] # Override default command
+    env_file:
+      - ./apps/ai/.env                    # Load env vars from this file
+    volumes:
+      - ./apps/ai:/usr/src/app/apps/ai                    # Mounts the current local project directory (host) to the container's working directory.
+      - ./libs:/usr/src/app/libs
+      - /usr/src/app/node_modules         # Prevents overwriting of node_modules by mounting the container's node_modules directory.
+    restart: always
+    ports:
+      - "3004:3004"                       # Expose your AI service
+    networks:
+      - microservices
+
+  # Cover Letter service
+  cover-letter-service:
+    container_name: cover-letter-service
+    build:
+      context: .                          # Root of your project
+      dockerfile: ./apps/cover-letter/Dockerfile    # Path to your custom Dockerfile
+      target: development                 # Use the "development" stage
+    command: ["npm", "run", "start:dev:cover-letter"] # Override default command
+    env_file:
+      - ./apps/cover-letter/.env          # Load env vars from this file
+    volumes:
+      - ./apps/cover-letter:/usr/src/app/apps/cover-letter                    # Mounts the current local project directory (host) to the container's working directory.
+      - ./libs:/usr/src/app/libs
+      - /usr/src/app/node_modules         # Prevents overwriting of node_modules by mounting the container's node_modules directory.
+    restart: always
+    ports:
+      - "3005:3005"                       # Expose your Cover Letter service
+    networks:
+      - microservices
+
+  # Notification service
+  notification-service:
+    container_name: notification-service
+    build:
+      context: .                          # Root of your project
+      dockerfile: ./apps/notification/Dockerfile    # Path to your custom Dockerfile
+      target: development                 # Use the "development" stage
+    command: ["npm", "run", "start:dev:notification"] # Override default command
+    env_file:
+      - ./apps/notification/.env          # Load env vars from this file
+    volumes:
+      - ./apps/notification:/usr/src/app/apps/notification                    # Mounts the current local project directory (host) to the container's working directory.
+      - ./libs:/usr/src/app/libs
+      - /usr/src/app/node_modules         # Prevents overwriting of node_modules by mounting the container's node_modules directory.
+    restart: always
+    networks:
+      - microservices
+
+# Shared network for all microservices
+networks:
+  microservices:
+    driver: bridge                         # Default bridge driver for container communication

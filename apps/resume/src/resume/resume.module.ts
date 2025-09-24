@@ -10,13 +10,14 @@ import { ClientsModule } from '@nestjs/microservices';
 import { AI_CLIENT } from '@app/contracts';
 import { RMQ_QUEUES, RmqModule } from '@app/common';
 import rabbitMqConfig from './config/rabbitMq.config';
+import resumeConfig from './config/resume.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // because rmq module need access to env vars
       envFilePath: `${process.cwd()}/apps/resume/.env`, // specify the environment file
-      load: [databaseConfig, rabbitMqConfig], // load the custom database and rabbitMq configuration
+      load: [databaseConfig, rabbitMqConfig, resumeConfig], // load the custom database and rabbitMq configuration
       validationSchema: envValidator,
     }),
     ClientsModule.register([

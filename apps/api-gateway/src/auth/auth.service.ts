@@ -9,6 +9,7 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 export class AuthService {
   constructor(@Inject(AUTH_CLIENT) private readonly authClient: ClientProxy) {}
 
+
   public signup(createUser: CreateUserDto) {
     // send(pattern, message) patern must be same as define in the auth microservices i.e. auth's controller
     return this.authClient.send(AUTH_PATTERNS.SIGNUP, createUser);
