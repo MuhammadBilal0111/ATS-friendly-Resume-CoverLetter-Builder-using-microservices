@@ -6,10 +6,8 @@ export default Joi.object({
     .default('development'),
   USERS_SERVICE_HOST: Joi.string().hostname().required(),
   USERS_SERVICE_PORT: Joi.number().port().required(),
-  DB_PORT: Joi.number().port().default(5432),
-  DB_PASSWORD: Joi.string().required(),
-  DB_USERNAME: Joi.string().required(),
-  DB_NAME: Joi.string().required(),
-  DB_HOST: Joi.string().required(),
+  DB_URL: Joi.string().uri().required(),
+  DB_SYNC: Joi.boolean().default(false),
+  AUTO_LOAD: Joi.boolean().default(false),
   RABBIT_MQ_URI: Joi.string().uri().required(),
 });

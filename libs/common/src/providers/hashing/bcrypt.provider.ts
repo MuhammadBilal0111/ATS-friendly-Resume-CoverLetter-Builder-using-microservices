@@ -7,7 +7,6 @@ export class BcryptProvider implements HashingProvider {
   public async hashPassword(password: string | Buffer): Promise<string> {
     // 1. Generate salt
     let salt = await bcrypt.genSalt();
-    console.log(salt);
     // 2. hash password
     return await bcrypt.hash(password, salt);
   }

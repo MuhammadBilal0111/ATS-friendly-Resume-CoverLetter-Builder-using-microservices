@@ -11,6 +11,7 @@
 # Build dependencies
 # ────────────────────────────────
 dist.do
+dist.do
 node_modules
 
 # ────────────────────────────────

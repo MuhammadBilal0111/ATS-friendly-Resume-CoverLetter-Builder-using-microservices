@@ -25,14 +25,11 @@ import usersConfig from './config/users.config';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        // entities: [User], // defines the tables to create, now typeorm aware about the user entity, you have to define every entity here
-        autoLoadEntities: configService.get<boolean>('userDB.autoLoadEntities'), // whenever you create a new entity it will be auto loaded and tables will be created in DB, ensure it must be import using type module
-        synchronize: configService.get<boolean>('userDB.synchronize'), // synchronize our entity with database, whatever we  change here immediately show changes in db
-        host: configService.get<string>('userDB.host'),
-        port: +configService.get('userDB.port'), // 5432
-        username: configService.get<string>('userDB.username'),
-        password: configService.get<string>('userDB.password'),
-        database: configService.get<string>('userDB.name'),
+        autoLoadEntities: configService.get<boolean>(
+          'usersDB.autoLoadEntities',
+        ), // whenever you create a new entity it will be auto loaded and tables will be created in DB, ensure it must be import using type module
+        synchronize: configService.get<boolean>('usersDB.synchronize'), // synchronize our entity with database, whatever we  change here immediately show changes in db
+        url: configService.get<string>('usersDB.url'),
       }),
     }),
   ], // now the module know about the User entity and user repository is automatically created by TYPEORM

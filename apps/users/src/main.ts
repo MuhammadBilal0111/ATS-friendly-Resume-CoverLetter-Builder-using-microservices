@@ -35,6 +35,6 @@ async function bootstrap() {
   // Start all microservices (no TCP port in listen)
   await app.startAllMicroservices();
   console.log('Users Microservice is running:');
-  console.log(`   - RabbitMQ Queue: ${RMQ_QUEUES.RMQ_QUEUE_AUTH_TO_USERS}`);
+  console.log(`- RabbitMQ Queue: ${RMQ_QUEUES.RMQ_QUEUE_AUTH_TO_USERS}`);
 }
 bootstrap();

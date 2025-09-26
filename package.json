@@ -1,10 +1,10 @@
 {
   "name": "baliresumate-backend",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Backend service for BaliResumate application",
+  "author": "Muhammad Bilal",
+  "license": "MIT",
   "private": true,
-  "license": "LICENSED",
   "engines": {
     "node": ">=20.0.0",
     "npm": ">=11.5.2"

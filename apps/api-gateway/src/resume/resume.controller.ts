@@ -40,7 +40,6 @@ export class ResumeController {
   // Example: http://localhost:3000/resume/123
   @Get()
   public getResumeByUserId(@ActiveUser('sub') userId: number) {
-    console.log(userId);
     return this.resumeService.getResumeByUserId(userId);
   }
 

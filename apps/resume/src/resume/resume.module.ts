@@ -6,7 +6,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import envValidator from './config/env.validation';
 import { Resume } from './entities/resume.entity';
-import { ClientsModule } from '@nestjs/microservices';
 import { AI_CLIENT } from '@app/contracts';
 import { RMQ_QUEUES, RmqModule } from '@app/common';
 import rabbitMqConfig from './config/rabbitMq.config';
@@ -20,15 +19,6 @@ import resumeConfig from './config/resume.config';
       load: [databaseConfig, rabbitMqConfig, resumeConfig], // load the custom database and rabbitMq configuration
       validationSchema: envValidator,
     }),
-    ClientsModule.register([
-      {
-        name: AI_CLIENT,
-        options: {
-          host: 'localhost',
-          port: 3004,
-        },
-      },
-    ]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

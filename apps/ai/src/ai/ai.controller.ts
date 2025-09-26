@@ -14,7 +14,6 @@ export class AiController {
 
   @MessagePattern(AI_PATTERNS.GENERATE_COVER_LETTER)
   public async createCoverLetter(@Payload() coverLetter: any) {
-    console.log(coverLetter);
     return this.aiService.createCoverLetter(coverLetter);
   }
 }

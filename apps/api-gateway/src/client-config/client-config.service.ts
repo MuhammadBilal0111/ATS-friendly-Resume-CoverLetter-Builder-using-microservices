@@ -46,13 +46,13 @@ export class ClientConfigService {
   // --------------
   getUserClientHost(): string {
     return this.configService.get<string>(
-      'microServiceConfig.userServiceHost',
+      'microServiceConfig.usersServiceHost',
     )!;
   }
 
   getUserClientPort(): number {
     return this.configService.get<number>(
-      'microServiceConfig.userServicePort',
+      'microServiceConfig.usersServicePort',
     )!;
   }
 

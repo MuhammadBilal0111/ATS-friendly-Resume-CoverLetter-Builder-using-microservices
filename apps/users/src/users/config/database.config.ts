@@ -1,11 +1,7 @@
 import { registerAs } from '@nestjs/config';
 
-export default registerAs('userDB', () => ({
-  host: process.env.DB_HOST || 'locahost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  name: process.env.DB_NAME,
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
+export default registerAs('usersDB', () => ({
+  url: process.env.DB_URL,
   synchronize: process.env.DB_SYNC === 'true' ? true : false,
   autoLoadEntities: process.env.AUTO_LOAD === 'true' ? true : false,
 }));

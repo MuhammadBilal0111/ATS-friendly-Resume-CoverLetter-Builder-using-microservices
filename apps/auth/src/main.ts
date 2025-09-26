@@ -2,13 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { RpcGlobalExceptionFilter } from '@app/common';
 import { AuthAppModule } from './auth-app.module';
-import { CoverLetterAppModule } from 'apps/cover-letter/src/cover-letter-app.module';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   // Create the app context first to get access to ConfigService
-  const appContext =
-    await NestFactory.createApplicationContext(CoverLetterAppModule);
+  const appContext = await NestFactory.createApplicationContext(AuthAppModule);
   const configService = appContext.get(ConfigService);
 
   // --------------------------------------
@@ -16,6 +14,7 @@ async function bootstrap() {
   // --------------------------------------
   const host = configService.get<string>('auth.authServiceHost')!;
   const port = configService.get<number>('auth.authServicePort')!;
+  console.log(port);
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AuthAppModule,
     // Second argument is he options object
