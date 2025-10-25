@@ -13,7 +13,7 @@ COPY package*.json ./
 # Installs all dependencies (including dev dependencies, since this is dev stage).
 RUN npm install
 
-# Copies the entire project into the container.
+# Copy only the api-gateway folder and shared libs
 COPY . .
 
 # This compiles/transpiles your source code (likely from apps/cover-letter) into the dist/apps folder.

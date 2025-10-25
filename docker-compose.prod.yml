@@ -1,0 +1,98 @@
+version: "3.9"
+
+services:
+  # 🚪 API Gateway
+  api-gateway:
+    container_name: api-gateway
+    image: 149831799297.dkr.ecr.us-east-1.amazonaws.com/api-gateway:latest  # Use pre-built ECR image
+    env_file:
+      - ./apps/api-gateway/.env
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - users-service
+      - auth-service
+      - resume-service
+      - cover-letter-service
+      - ai-service
+      - notification-service
+    networks:
+      - microservices
+
+  # 👤 Users Service
+  users-service:
+    container_name: users-service
+    image: 149831799297.dkr.ecr.us-east-1.amazonaws.com/users-service:latest
+    env_file:
+      - ./apps/users/.env
+    restart: always
+    ports:
+      - "3003:3003"
+    networks:
+      - microservices
+
+  # 🪪 Auth Service
+  auth-service:
+    container_name: auth-service
+    image: 149831799297.dkr.ecr.us-east-1.amazonaws.com/auth-service:latest
+    env_file:
+      - ./apps/auth/.env
+    restart: always
+    ports:
+      - "3001:3001"
+    networks:
+      - microservices
+
+  # 🧾 Resume Service
+  resume-service:
+    container_name: resume-service
+    image: 149831799297.dkr.ecr.us-east-1.amazonaws.com/resume-service:latest
+    env_file:
+      - ./apps/resume/.env
+    restart: always
+    ports:
+      - "3002:3002"
+    networks:
+      - microservices
+
+  # 🤖 AI Service
+  ai-service:
+    container_name: ai-service
+    image: 149831799297.dkr.ecr.us-east-1.amazonaws.com/ai-service:latest
+    env_file:
+      - ./apps/ai/.env
+    restart: always
+    ports:
+      - "3004:3004"
+    networks:
+      - microservices
+
+  # 💌 Cover Letter Service
+  cover-letter-service:
+    container_name: cover-letter-service
+    image: 149831799297.dkr.ecr.us-east-1.amazonaws.com/cover-letter-service:latest
+    env_file:
+      - ./apps/cover-letter/.env
+    restart: always
+    ports:
+      - "3005:3005"
+    networks:
+      - microservices
+
+  # 🔔 Notification Service
+  notification-service:
+    container_name: notification-service
+    image: 149831799297.dkr.ecr.us-east-1.amazonaws.com/notification-service:latest
+    env_file:
+      - ./apps/notification/.env
+    restart: always
+    ports:
+      - "3006:3006"
+    networks:
+      - microservices
+
+# 🌐 Shared network
+networks:
+  microservices:
+    driver: bridge
