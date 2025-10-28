@@ -1,7 +1,8 @@
 // DTOs
 // Auth
-export * from './auth/dto/Jwt.dto';
+export * from './auth/dto/jwt.dto';
 export * from './auth/dto/refresh-token.dto';
+export * from './auth/dto/jwt-cookie.dto';
 
 // Users
 export * from './users/dto/create-user.dto';

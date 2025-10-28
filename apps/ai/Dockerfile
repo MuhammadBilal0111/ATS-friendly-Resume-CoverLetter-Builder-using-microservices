@@ -40,7 +40,7 @@ COPY package*.json ./
 RUN npm install --only=production
 
 # Copies the built dist folder from the development stage into this production stage.
-# This way, the production image doesn’t need dev dependencies or build tools.
+# This way, the production image doesn't need dev dependencies or build tools.
 COPY --from=development /usr/src/app/dist ./dist
 
 CMD [ "npm", "run", "start:prod:ai" ]

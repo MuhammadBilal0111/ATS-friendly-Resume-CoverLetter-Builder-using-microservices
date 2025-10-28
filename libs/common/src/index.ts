@@ -15,6 +15,7 @@ export * from './guards/authorize.guard';
 // decorators
 export * from './decorators/allow-anonymous.decorator';
 export * from './decorators/active-user.decorator';
+export * from './decorators/jwt-from-cookie.decorator';
 
 // RabbitMq
 export * from './rmq/rmq.module';

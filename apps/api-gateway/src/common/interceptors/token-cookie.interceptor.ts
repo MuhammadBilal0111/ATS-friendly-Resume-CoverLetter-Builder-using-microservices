@@ -28,7 +28,6 @@ function setCookie(
 export class CookieInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const response = context.switchToHttp().getResponse<Response>();
-
     return next.handle().pipe(
       map((data) => {
         const {

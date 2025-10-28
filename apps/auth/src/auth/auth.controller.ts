@@ -5,6 +5,7 @@ import {
   AUTH_PATTERNS,
   CreateUserDto,
   ExistingUserDto,
+  JwtCookieDto,
   JwtDto,
   RefreshTokenDto,
 } from '@app/contracts';
@@ -37,5 +38,10 @@ export class AuthController {
   @MessagePattern(AUTH_PATTERNS.REFRESH_TOKEN)
   public async refreshToken(@Payload() refreshTokenDto: RefreshTokenDto) {
     return this.authService.refreshToken(refreshTokenDto);
+  }
+  // handler for signout
+  @MessagePattern(AUTH_PATTERNS.SIGNOUT)
+  public async signout(@Payload() tokens: JwtCookieDto) {
+    return this.authService.signout(tokens);
   }
 }

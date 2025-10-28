@@ -13,7 +13,13 @@
       "entryFile": "main",
       "sourceRoot": "apps/ai/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/ai/tsconfig.app.json"
+        "tsConfigPath": "apps/ai/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "ai/prompts/*.txt",
+            "outDir": "dist/apps/ai"
+          }
+        ]
       }
     },
     "api-gateway": {

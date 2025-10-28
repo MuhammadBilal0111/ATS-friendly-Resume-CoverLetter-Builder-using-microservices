@@ -3,6 +3,7 @@ import {
   ActiveUserType,
   CreateUserDto,
   ExistingUserDto,
+  JwtCookieDto,
   JwtDto,
   NOTIFICATION_CLIENT,
   NOTIFICATION_PATTERNS,
@@ -15,7 +16,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigType } from '@nestjs/config';
 import authConfig from './config/auth.config';
 import { AppRpcException, HashingProvider } from '@app/common';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, map, catchError, of } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -58,6 +59,7 @@ export class AuthService {
   ) {
     // Generate the JWT
     // provide 2 arguments and 2 is optional
+    // here the process of signing json web accessToken takes place
     return await this.jwtService.signAsync(
       // signing process of JWT
       {
@@ -65,12 +67,11 @@ export class AuthService {
         ...payload,
       },
       {
-        secret: this.authConfiguration.secret, // secret key to generate jwt
+        secret: this.authConfiguration.secret,
         expiresIn: jwt_token_expiresIn,
         audience: this.authConfiguration.audience,
         issuer: this.authConfiguration.issuer,
       },
-      // here the process of signing json web accessToken takes place
     );
   }
   // function to handle sign up
@@ -86,7 +87,6 @@ export class AuthService {
       };
     } catch (error) {
       // Expecting the user microservice to send a structured RpcException
-
       throw new AppRpcException(
         'Signup failed',
         error?.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -158,10 +158,11 @@ export class AuthService {
   public async verifyJwt(jwtDto: JwtDto) {
     try {
       // return payload if accessToken is valid, otherwise through an exception
-      const payload = await this.jwtService.verifyAsync(
-        jwtDto.jwt,
-        this.authConfiguration,
-      );
+      const payload = await this.jwtService.verifyAsync(jwtDto.jwt, {
+        secret: this.authConfiguration.secret,
+        audience: this.authConfiguration.audience,
+        issuer: this.authConfiguration.issuer,
+      });
       return payload;
     } catch (error) {
       throw new AppRpcException(
@@ -173,24 +174,50 @@ export class AuthService {
   public async refreshToken(refreshTokenDto: RefreshTokenDto) {
     try {
       // 1. Verify the refresh token
-      const payload = await this.jwtService.verifyAsync(
-        refreshTokenDto.refreshToken,
-        {
-          secret: this.authConfiguration.secret,
-          audience: this.authConfiguration.audience,
-          issuer: this.authConfiguration.issuer,
-        },
-      );
-      return payload;
-      // TODO: ACCESS THE USER
+      const { sub } = await this.verifyJwt({
+        jwt: refreshTokenDto.refreshToken,
+      });
       // 2. Find user from DB using id
-      // const user = await this.usersService.findUserById(sub);
+      const user = await lastValueFrom(
+        this.usersClient.send(USERS_PATTERNS.GET_USER_BY_ID, {
+          userId: sub,
+        }),
+      );
+      if (!user) {
+        throw new AppRpcException(
+          'User not found. Cannot refresh token.',
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
+
       // 3. generate access and refresh token
-      // return this.generateToken(user);
+      const tokens = await this.generateToken(user);
+      return {
+        success: true,
+        message: 'Token refreshed successfully',
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
+        accessTokenExpiresIn: this.authConfiguration.jwt_token_expiresIn,
+        refreshTokenExpiresIn: this.authConfiguration.refreshTokenExpiresIn,
+      };
     } catch (error) {
+      if (error instanceof AppRpcException) throw error;
       throw new AppRpcException(
         'Refresh token is invalid or expired. Please login again.',
-        HttpStatus.UNAUTHORIZED,
+        error?.statusCode || HttpStatus.UNAUTHORIZED,
+        error?.message || error,
+      );
+    }
+  }
+  public async signout(tokens: JwtCookieDto) {
+    try {
+      // TODO: Implement token invalidation logic
+      return { success: true, message: 'User signed out successfully' };
+    } catch (error) {
+      throw new AppRpcException(
+        'Signout failed',
+        error?.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
+        error?.message || error,
       );
     }
   }
