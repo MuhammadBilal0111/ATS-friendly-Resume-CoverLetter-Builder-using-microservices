@@ -212,7 +212,7 @@ export class AuthService {
   public async signout(tokens: JwtCookieDto) {
     try {
       // TODO: Implement token invalidation logic
-      return { success: true, message: 'User signed out successfully' };
+      return { success: true, message: 'User signed out successfully!' };
     } catch (error) {
       throw new AppRpcException(
         'Signout failed',
