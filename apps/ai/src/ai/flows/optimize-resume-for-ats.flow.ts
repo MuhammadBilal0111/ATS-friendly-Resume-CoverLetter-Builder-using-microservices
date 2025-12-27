@@ -1,64 +1,58 @@
+import { genkit } from 'genkit';
 import { loadPrompt } from '../utils/loadPrompts';
 import { PROMPTS_FILE_PATH } from '../constants/prompts-file-path';
-import { ResumeSchema } from '../schemas/resume.schema';
-import { z, type Genkit } from 'genkit';
-import { AppRpcException } from '@app/common';
 import { HttpStatus } from '@nestjs/common';
+import { AppRpcException } from '@app/common';
+import {
+  OptimizeResumeInputSchema,
+  ResumeSchema,
+} from '../schemas/resume.schema';
 
-// Input Schema
-export const OptimizeResumeForATSInputSchema = z.object({
-  resume: ResumeSchema,
-  jobDescription: z
-    .string()
-    .optional()
-    .describe('The full job description the user is applying for.'),
-});
+// Define the ATS Optimization Flow
+export const defineOptimizeResumeFlow = (ai: ReturnType<typeof genkit>) => {
+  let atsPromptText: string | null = null;
 
-// Types
-export type OptimizeResumeForATSInput = z.infer<
-  typeof OptimizeResumeForATSInputSchema
->;
-export type OptimizeResumeForATSOutput = z.infer<typeof ResumeSchema>;
-
-// Load prompt lazily
-let atsPromptText: string | null = null;
-
-export async function optimizeResumeForATS(
-  ai: Genkit, // Pass in the injected AI instance
-  input: OptimizeResumeForATSInput,
-): Promise<OptimizeResumeForATSOutput> {
-  if (!atsPromptText) {
-    atsPromptText = await loadPrompt(
-      PROMPTS_FILE_PATH.RESUME_ATS_OPTIMIZATION_PROMPT_FILE_PATH,
-    );
-  }
-
-  // Define the prompt
-  const prompt = ai.definePrompt({
-    name: 'optimizeResumePrompt',
-    input: { schema: OptimizeResumeForATSInputSchema },
-    output: { schema: ResumeSchema },
-    prompt: atsPromptText,
-  });
-
-  // Define the flow
-  const optimizeResumeFlow = ai.defineFlow(
+  return ai.defineFlow(
     {
-      name: 'optimizeResumeFlow',
-      inputSchema: OptimizeResumeForATSInputSchema,
+      name: 'OptimizeResumeFlow',
+      inputSchema: OptimizeResumeInputSchema,
       outputSchema: ResumeSchema,
     },
-    async (flowInput) => {
-      const { output } = await prompt(flowInput);
-      if (!output) {
+    async (input) => {
+      try {
+        // Load prompt lazily (only once)
+        if (!atsPromptText) {
+          atsPromptText = await loadPrompt(
+            PROMPTS_FILE_PATH.RESUME_ATS_OPTIMIZATION_PROMPT_FILE_PATH,
+          );
+        }
+
+        // Construct the prompt dynamically
+        const prompt = atsPromptText
+          .replace('{{{jobDescription}}}', input.jobDescription || '')
+          .replace('{{{json resume}}}', JSON.stringify(input.resume, null, 2));
+
+        // Generate structured output from AI
+        const { output } = await ai.generate({
+          prompt,
+          output: { schema: ResumeSchema },
+        });
+
+        if (!output) {
+          throw new AppRpcException(
+            'Failed to optimize resume for ATS',
+            HttpStatus.INTERNAL_SERVER_ERROR,
+          );
+        }
+
+        return output;
+      } catch (error) {
         throw new AppRpcException(
-          'Failed to generate cover letter',
-          HttpStatus.INTERNAL_SERVER_ERROR,
+          'Error optimizing resume for ATS',
+          error?.statusCode || HttpStatus.INTERNAL_SERVER_ERROR,
+          error?.message || String(error),
         );
       }
-      return output;
     },
   );
-
-  return optimizeResumeFlow(input);
-}
+};

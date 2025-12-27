@@ -37,6 +37,7 @@
     "test:e2e": "jest --config ./apps/api-gateway/test/jest-e2e.json"
   },
   "dependencies": {
+    "@genkit-ai/google-genai": "^1.27.0",
     "@genkit-ai/googleai": "^1.16.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
@@ -53,7 +54,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
     "cookie-parser": "^1.4.7",
-    "genkit": "^1.16.1",
+    "genkit": "^1.27.0",
     "helmet": "^8.1.0",
     "i": "^0.3.7",
     "joi": "^17.13.3",

@@ -1,7 +1,3 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { BaseTokenDto } from './base-token.dto';
 
-export class RefreshTokenDto {
-  @IsNotEmpty()
-  @IsString()
-  refreshToken: string;
-}
+export class RefreshTokenDto extends BaseTokenDto {}

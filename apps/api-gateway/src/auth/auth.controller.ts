@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -10,16 +11,16 @@ import { AuthService } from './auth.service';
 import { ExistingUserDto } from '../common/dto/existing-user.dto';
 import { CreateUserDto } from '../common/dto/create-user.dto';
 import { AllowAnonymous, JwtFromCookie } from '@app/common';
-import { CookieInterceptor } from '../common/interceptors/token-cookie.interceptor';
+import { CookieInterceptor } from './interceptors/token-cookie.interceptor';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { JwtCookieDto } from './dto/jwt-cookie.dto';
-import { ExpireCookieInterceptor } from '../common/interceptors/expires-cookie.interceptor';
+import { ExpireCookieInterceptor } from './interceptors/expires-cookie.interceptor';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  // http://localhost:3000/auth/signup
+  // http://localhost:3000/auth/register
   @AllowAnonymous()
   @Post('register')
   public signup(@Body() createUser: CreateUserDto) {
@@ -40,10 +41,11 @@ export class AuthController {
   @UseInterceptors(CookieInterceptor)
   @HttpCode(HttpStatus.OK)
   @AllowAnonymous()
-  @Post('refresh-token')
+  @Get('refresh-token')
   public refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
     return this.authService.refreshToken(refreshTokenDto);
   }
+  
   // http://localhost:3000/auth/signout
   @UseInterceptors(ExpireCookieInterceptor)
   @HttpCode(HttpStatus.OK)

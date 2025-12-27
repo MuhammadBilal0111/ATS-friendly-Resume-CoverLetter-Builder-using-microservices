@@ -13,8 +13,9 @@ export class ExpireCookieInterceptor implements NestInterceptor {
     next: CallHandler<any>,
   ): Observable<any> {
     const response = context.switchToHttp().getResponse();
+    console.log('Expiring authentication cookies');
     const isProd = process.env.NODE_ENV === 'production';
-    
+
     return next.handle().pipe(
       map((data) => {
         // Clear both cookies using same options as in setCookie()

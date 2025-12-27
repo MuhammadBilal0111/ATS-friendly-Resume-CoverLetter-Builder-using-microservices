@@ -1,18 +1,23 @@
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { GEMINI_AI_PROVIDER } from '@app/contracts';
+import { CoverLetterDto, GEMINI_AI_PROVIDER, ResumeDto } from '@app/contracts';
 import type { Genkit } from 'genkit';
-import { optimizeResumeForATS } from './flows/optimize-resume-for-ats.flow';
-import { generateCoverLetter } from './flows/generate-cover-letter.flow';
+import { defineOptimizeResumeFlow } from './flows/optimize-resume-for-ats.flow';
+import { defineCoverLetterFlow } from './flows/generate-cover-letter.flow';
 import { AppRpcException } from '@app/common';
 import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class AiService {
-  constructor(@Inject(GEMINI_AI_PROVIDER) private readonly geminiAi: Genkit) {}
+  private readonly coverLetterFlow: any;
+  private readonly optimizeResumeFlow: any;
+  constructor(@Inject(GEMINI_AI_PROVIDER) private readonly geminiAi: Genkit) {
+    this.coverLetterFlow = defineCoverLetterFlow(this.geminiAi);
+    this.optimizeResumeFlow = defineOptimizeResumeFlow(this.geminiAi);
+  }
   // method for the optimizing of resume
-  public async optimizeResume(resume: any) {
+  public async optimizeResume(resume: ResumeDto) {
     try {
-      return await optimizeResumeForATS(this.geminiAi, resume);
+      return await this.optimizeResumeFlow(resume);
     } catch (error) {
       if (error instanceof RpcException) throw error;
       throw new AppRpcException(
@@ -23,9 +28,9 @@ export class AiService {
     }
   }
   // method for the creation of coverLetter using genkits
-  public async createCoverLetter(coverLetter: any) {
+  public async createCoverLetter(coverLetter: CoverLetterDto) {
     try {
-      return await generateCoverLetter(this.geminiAi, coverLetter);
+      return await this.coverLetterFlow(coverLetter);
     } catch (error) {
       if (error instanceof RpcException) throw error;
       throw new AppRpcException(

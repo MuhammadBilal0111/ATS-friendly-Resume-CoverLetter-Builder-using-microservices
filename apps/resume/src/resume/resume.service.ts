@@ -130,9 +130,9 @@ export class ResumeService {
     return this.aiClient
       .send(AI_PATTERNS.OPTIMIZE_RESUME, optimizeResumeDto)
       .pipe(
-        timeout(20000), // 10 seconds
+        timeout(30000), // 30 seconds
         catchError((err) => {
-          console.log('Error in CoverLetterService:', err);
+          console.log('Error in Resume Service:', err);
           if (err instanceof RpcException) {
             return throwError(() => err);
           }

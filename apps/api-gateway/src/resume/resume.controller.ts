@@ -55,8 +55,8 @@ export class ResumeController {
   // DELETE /resume/:resumeId
   // Delete a resume by resume ID
   // Example: http://localhost:3000/resume/resume_3457
-  @Delete(':resumeId')
   @HttpCode(HttpStatus.OK) // 200 status code
+  @Delete(':resumeId')
   public deleteResume(@Param('resumeId', ParseObjectIdPipe) resumeId: string) {
     return this.resumeService.deleteResume(resumeId);
   }
@@ -65,6 +65,7 @@ export class ResumeController {
   // Optimize a resume for ATS (Applicant Tracking Systems) using AI
   // Sends the provided resume data and job description to the AI microservice
   // Example: POST http://localhost:3000/resume/optimize
+  @HttpCode(HttpStatus.OK)
   @Post('optimize')
   public optimizeResume(@Body() optimizeResumeDto: OptimizeResumeDto) {
     return this.resumeService.optimizeResume(optimizeResumeDto);

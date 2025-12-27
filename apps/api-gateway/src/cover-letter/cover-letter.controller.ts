@@ -1,4 +1,11 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { CoverLetterService } from './cover-letter.service';
 import { GenerateCoverLetterDto } from './dto/generate-cover-letter.dto';
 import { AuthorizeGuard } from '@app/common';
@@ -11,6 +18,7 @@ export class CoverLetterController {
   // POST /cover-letter
   // Create a cover letter with AI
   // Example: http://localhost:3000/cover-letter
+  @HttpCode(HttpStatus.OK)
   @Post()
   public generateCoverLetter(@Body() coverLetter: GenerateCoverLetterDto) {
     return this.coverLetterService.generateCoverLetter(coverLetter);

@@ -4,11 +4,10 @@ import { AiController } from './ai.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import envValidator from './config/env.validation';
 import aiConfig from './config/ai.config';
-import { genkit } from 'genkit';
-import googleAI from '@genkit-ai/googleai';
 import { GEMINI_AI_PROVIDER } from '@app/contracts';
 import { RmqModule } from '@app/common';
 import rabbitMqConfig from 'apps/resume/src/resume/config/rabbitMq.config';
+import { initializeAI } from './config/genkit.initialize.config';
 
 @Module({
   imports: [
@@ -25,19 +24,7 @@ import rabbitMqConfig from 'apps/resume/src/resume/config/rabbitMq.config';
     {
       provide: GEMINI_AI_PROVIDER,
       useFactory: (configService: ConfigService) => {
-        return genkit({
-          plugins: [
-            googleAI({
-              apiKey: configService.get<string>('aiConfig.geminiApiKey'),
-            }),
-          ],
-          model: googleAI.model(
-            configService.get<string>('aiConfig.aiModel') as string,
-            {
-              temperature: 0.8,
-            },
-          ),
-        });
+        return initializeAI(configService);
       },
       inject: [ConfigService],
     },

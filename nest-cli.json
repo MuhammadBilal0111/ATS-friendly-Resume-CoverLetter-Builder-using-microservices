@@ -16,10 +16,11 @@
         "tsConfigPath": "apps/ai/tsconfig.app.json",
         "assets": [
           {
-            "include": "ai/prompts/*.txt",
+            "include": "apps/ai/src/ai/prompts/*.txt",
             "outDir": "dist/apps/ai"
           }
-        ]
+        ],
+        "watchAssets": true
       }
     },
     "api-gateway": {

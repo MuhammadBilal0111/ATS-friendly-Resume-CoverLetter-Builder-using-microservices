@@ -27,10 +27,10 @@ export class NotificationController {
   ) {
     try {
       await this.notificationService.sendWelcomeEmail(notificationDto);
-    } catch (error) {
-      console.error('❌ Failed to send welcome email:', error);
-    } finally {
       this.rmqService.ack(context);
+    } catch (error) {
+      console.error('Failed to send welcome email:', error);
+      throw error;
     }
   }
 }

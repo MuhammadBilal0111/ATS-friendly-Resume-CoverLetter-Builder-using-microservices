@@ -24,6 +24,10 @@ export * from './cover-letter/dto/generateCoverLetter.dto';
 // Notification
 export * from './notification/dto/notification.dto';
 
+// AI
+export * from './ai/dto/resume.dto';
+export * from './ai/dto/cover-letterdto';
+
 // Message Patterns
 export * from './auth/auth.patterns';
 export * from './users/users.pattern';

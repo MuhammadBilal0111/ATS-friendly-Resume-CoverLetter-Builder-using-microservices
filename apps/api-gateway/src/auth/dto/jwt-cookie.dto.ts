@@ -1,11 +1,8 @@
 import { IsNotEmpty, IsString } from 'class-validator';
+import { BaseTokenDto } from './base-token.dto';
 
-export class JwtCookieDto {
+export class JwtCookieDto extends BaseTokenDto {
   @IsNotEmpty()
   @IsString()
   accessToken: string;
-
-  @IsNotEmpty()
-  @IsString()
-  refreshToken: string;
 }

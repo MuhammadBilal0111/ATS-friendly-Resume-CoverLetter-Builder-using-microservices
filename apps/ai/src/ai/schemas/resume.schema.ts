@@ -63,4 +63,13 @@ export const ResumeSchema = z.object({
   certifications: z.array(CertificationSchema),
   template: TemplateSchema,
 });
-export type Resume = z.infer<typeof ResumeSchema>;
+// Input Schema
+export const OptimizeResumeInputSchema = z.object({
+  resume: ResumeSchema,
+  jobDescription: z
+    .string()
+    .optional()
+    .describe('The full job description the user is applying for.'),
+});
+export type OptimizeResumeInput = z.infer<typeof OptimizeResumeInputSchema>;
+export type OptimizeResumeOutput = z.infer<typeof ResumeSchema>;
