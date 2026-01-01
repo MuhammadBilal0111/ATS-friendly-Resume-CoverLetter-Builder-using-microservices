@@ -617,12 +617,6 @@ We welcome contributions from the community! Whether you're fixing bugs, improvi
 
 ---
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
 ## Acknowledgments
 
 Built with love using:
